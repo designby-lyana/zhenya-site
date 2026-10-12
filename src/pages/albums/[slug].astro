@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import site from '../../data/site.json';
+import { slugify } from '../../lib/img';
+
+export async function getStaticPaths() {
+  const albums = (await getCollection('albums')).filter((a) => !a.data.hidden);
+  return albums.map((a) => ({
+    params: { slug: /^[a-z0-9-]+$/.test(a.id) ? a.id : slugify(a.data.title) },
+    props: { album: a.data },
+  }));
+}
+const { album } = Astro.props;
+const c = site.contacts;
+---
+<Base title={`${album.title} — ${site.header.name}`} description={album.coverAlt}>
+  <section class="section wrap album-page">
+    <a class="link-more back" href="/#portfolio">← Усі альбоми</a>
+    <h1 class="h-section">{album.title}</h1>
+    <p class="lead">{album.photos.length} фото</p>
+
+    <div class="album-grid">
+      {album.photos.map((p, i) => (
+        <a href={p.photo} class={`album-shot${i % 6 === 2 ? ' is-round' : ''}`} data-lightbox="album" data-caption={p.alt}>
+          <Photo src={p.photo} alt={p.alt} sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+        </a>
+      ))}
+    </div>
+
+    <div class="contact album-contact">
+      <h2 class="h-section">{site.contact.title}</h2>
+      <div class="contact-cta">
+        <a class="btn is-primary" href={c.instagram} target="_blank" rel="noopener">{site.contact.instagramLabel}</a>
+        <a class="btn" href={c.whatsapp} target="_blank" rel="noopener">{site.contact.whatsappLabel}</a>
+      </div>
+    </div>
+  </section>
+</Base>

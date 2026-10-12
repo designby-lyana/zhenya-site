@@ -1,0 +1,178 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import site from '../data/site.json';
+import { catKey, slugify, img } from '../lib/img';
+
+const cats = (await getCollection('categories')).sort((a, b) => a.data.order - b.data.order);
+const catName = Object.fromEntries(cats.map((c) => [c.id, c.data.name]));
+
+const photos = (await getCollection('portfolio'))
+  .filter((p) => !p.data.hidden)
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({ ...p.data, id: p.id, cats: p.data.categories.map(catKey) }));
+
+const recent = photos
+  .filter((p) => p.recent)
+  .sort((a, b) => (a.recent ?? 0) - (b.recent ?? 0));
+
+const albums = (await getCollection('albums'))
+  .filter((a) => !a.data.hidden)
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((a) => ({ ...a.data, slug: /^[a-z0-9-]+$/.test(a.id) ? a.id : slugify(a.data.title) }));
+
+// показуємо лише категорії, в яких є хоч одне фото
+const usedCats = cats.filter((c) => photos.some((p) => p.cats.includes(c.id)));
+
+const { hero, about, prices, contact, contacts: c } = site;
+const tel = `tel:${c.phone.replace(/\s/g, '')}`;
+---
+<Base>
+  <!-- ГЕРОЙ -->
+  <section class="hero" id="top">
+    <div class="hero-media" data-hero data-slides={JSON.stringify(hero.slides.map((s) => ({ src: img(s.photo).src, alt: s.alt })))}>
+      {hero.pair.map((p, i) => (
+        <figure class={`hero-cell hero-cell--${i === 0 ? 'l' : 'r'}`}>
+          <Photo src={p.photo} alt={p.alt} eager sizes="(max-width: 768px) 100vw, 50vw" />
+        </figure>
+      ))}
+      <a href="#portfolio" class="hero-dot" aria-label="До портфоліо">↓</a>
+    </div>
+
+    <div class="hero-text wrap">
+      <h1 class="hero-title">{hero.title}</h1>
+      <p class="hero-sub">{hero.subtitle}</p>
+      <div class="hero-cta">
+        <a class="btn is-primary" href={c.instagram} target="_blank" rel="noopener">Напиши в Instagram</a>
+        <a class="btn" href={c.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+      <ul class="facts">{hero.facts.map((f) => <li>{f}</li>)}</ul>
+    </div>
+  </section>
+
+  <!-- ПОРТФОЛІО -->
+  <section class="section wrap reveal" id="portfolio">
+    <h2 class="h-section">{site.portfolio.title}</h2>
+
+    <div class="tabs" role="tablist" aria-label="Як показати роботи">
+      <button class="tab is-active" role="tab" aria-selected="true" data-tab="cats">Категорії</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="albums">Альбоми</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="recent">Останні</button>
+    </div>
+
+    <div class="pane" data-pane="cats">
+      <div class="filter-bar">
+        <div class="chips" role="group" aria-label="Категорії">
+          <button class="chip is-active" data-cat="all" aria-pressed="true">Усі</button>
+          {usedCats.map((cat) => <button class="chip" data-cat={cat.id} aria-pressed="false">{cat.data.name}</button>)}
+        </div>
+        <div class="view-switch" role="group" aria-label="Вигляд">
+          <button class="is-active" data-mode="scroll" aria-pressed="true">Горизонтальний скрол</button>
+          <button data-mode="grid" aria-pressed="false">Сітка</button>
+        </div>
+      </div>
+
+      <div class="gallery is-scroll" data-gallery>
+        {photos.map((p, i) => (
+          <figure class="shot" data-cats={p.cats.join(' ')}>
+            <a href={p.photo} class={`shot-frame${i % 5 === 1 ? ' is-round' : ''}`} data-lightbox="portfolio" data-caption={p.title}>
+              <Photo src={p.photo} alt={p.alt} sizes="(max-width: 480px) 100vw, (max-width: 1024px) 40vw, 300px" />
+            </a>
+            <figcaption>
+              <span class="shot-title">{p.title}</span>
+              <span class="cat-tags">{p.cats.map((k) => <span class="cat-tag">{catName[k]}</span>)}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="empty-note" hidden>У цій категорії поки немає фото.</p>
+    </div>
+
+    <div class="pane albums" data-pane="albums" hidden>
+      {albums.map((a, i) => (
+        <a class="album" href={`/albums/${a.slug}/`}>
+          <div class={`album-cover${i % 3 === 0 ? ' is-round' : ''}`}>
+            <Photo src={a.cover} alt={a.coverAlt} sizes="(max-width: 768px) 100vw, 33vw" />
+          </div>
+          <div class="album-name">{a.title}</div>
+          <div class="album-count">{a.photos.length} фото</div>
+        </a>
+      ))}
+    </div>
+
+    <div class="pane" data-pane="recent" hidden>
+      <p class="recent-note">{site.portfolio.recentNote}</p>
+      <div class="gallery is-scroll">
+        {recent.map((p) => (
+          <figure class="shot">
+            <a href={p.photo} class="shot-frame" data-lightbox="recent" data-caption={p.title}>
+              <Photo src={p.photo} alt={p.alt} sizes="(max-width: 480px) 100vw, 300px" />
+            </a>
+            <figcaption><span class="shot-title">{p.title}</span></figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ПРО МЕНЕ -->
+  <section class="section wrap reveal" id="about">
+    <div class="about">
+      <div class="about-photo">
+        <Photo src={about.photo} alt={about.photoAlt} sizes="(max-width: 1024px) 100vw, 45vw" />
+      </div>
+      <div class="about-text">
+        <h2 class="h-section">{about.title}</h2>
+        {about.paragraphs.map((t) => <p>{t}</p>)}
+        <ul class="facts facts--left">{hero.facts.map((f) => <li>{f}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЦІНИ -->
+  <section class="section band reveal" id="prices">
+    <div class="wrap">
+      <h2 class="h-section">{prices.title}</h2>
+      <dl class="price-terms">
+        {prices.terms.map((t) => <div><dt>{t.label}</dt><dd>{t.text}</dd></div>)}
+      </dl>
+      <div class="price-cards">
+        {prices.packages.map((p, i) => (
+          <article class={`price-card tone-${p.tone}${i === 0 ? ' is-round' : ''}`} data-package>
+            <p class="price-where">{p.where}</p>
+            <h3 class="price-name">{p.name}{p.badge && <span class="price-badge">{p.badge}</span>}</h3>
+            {p.note && <p class="price-note">{p.note}</p>}
+            <p class="price-value"><span data-price>{p.price}</span> <small>грн</small></p>
+            <p class="price-per" data-per>{p.per}</p>
+            {p.hours && (
+              <div class="hours" role="group" aria-label="Скільки годин">
+                {p.hours.map((h, k) => (
+                  <button class={k === 0 ? 'is-active' : ''} aria-pressed={k === 0 ? 'true' : 'false'}
+                    data-hours-price={h.price} data-hours-per={h.per}>{h.hours}</button>
+                ))}
+              </div>
+            )}
+            <ul class="price-stats">
+              {p.stats.map((s) => <li><b>{s.value}</b><span>{s.label}</span></li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- КОНТАКТИ -->
+  <section class="section wrap contact reveal" id="contact">
+    <h2 class="h-section">{contact.title}</h2>
+    <div class="contact-cta">
+      <a class="btn is-primary" href={c.instagram} target="_blank" rel="noopener">{contact.instagramLabel}</a>
+      <a class="btn" href={c.whatsapp} target="_blank" rel="noopener">{contact.whatsappLabel}</a>
+      <a class="btn" href={tel}>{contact.phoneLabel}</a>
+    </div>
+  </section>
+
+  <div slot="footer-top" class="reviews" aria-label="Що кажуть після зйомки">
+    {site.reviews.map((r, i) => <p class={`bubble${i % 2 ? ' bubble--alt' : ''}`}>{r}</p>)}
+  </div>
+</Base>

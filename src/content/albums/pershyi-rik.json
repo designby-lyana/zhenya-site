@@ -1,0 +1,52 @@
+{
+  "title": "Перший рік",
+  "order": 6,
+  "cover": "/media/teplo-tato-malyuk.jpeg",
+  "coverAlt": "Усміхнене маля з батьками на пледі в полі, вечірнє сонце",
+  "photos": [
+    {
+      "photo": "/media/teplo-tato-malyuk.jpeg",
+      "alt": "Маля з батьками на пледі в полі"
+    },
+    {
+      "photo": "/media/rik-krop-malyuk.jpeg",
+      "alt": "Усмішка малюка, крупно"
+    },
+    {
+      "photo": "/media/pryroda-simya-kulka.jpeg",
+      "alt": "Сімʼя йде полем із кулькою-одиницею"
+    },
+    {
+      "photo": "/media/rik-krop-pole.jpeg",
+      "alt": "Поле, горизонтальний кадр"
+    },
+    {
+      "photo": "/media/pf-chb-para-z-malyukom.webp",
+      "alt": "Батьки з немовлям, чорно-біле фото"
+    },
+    {
+      "photo": "/media/pf-chb-mama-tsiluie.webp",
+      "alt": "Мама цілує малюка"
+    },
+    {
+      "photo": "/media/pf-chb-malyuk-krupno.webp",
+      "alt": "Немовля крупним планом"
+    },
+    {
+      "photo": "/media/teplo-mama-malyuk-01.jpeg",
+      "alt": "Мама підіймає сина в контровому світлі"
+    },
+    {
+      "photo": "/media/dity-mama-bilya-vikna.jpeg",
+      "alt": "Мама з сином біля вікна"
+    },
+    {
+      "photo": "/media/pf-dity-solodke.webp",
+      "alt": "Малюк і тістечко"
+    },
+    {
+      "photo": "/media/rik-krop-tistechko.jpeg",
+      "alt": "Тістечко, ближче"
+    }
+  ]
+}

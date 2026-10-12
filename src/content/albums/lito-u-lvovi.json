@@ -1,0 +1,52 @@
+{
+  "title": "Літо у Львові",
+  "order": 4,
+  "cover": "/media/portret-vulytsya-okulyary.jpeg",
+  "coverAlt": "Дівчина в сонцезахисних окулярах на сонячній вулиці Львова",
+  "photos": [
+    {
+      "photo": "/media/portret-vulytsya-okulyary.jpeg",
+      "alt": "Дівчина в окулярах на сонячній вулиці Львова"
+    },
+    {
+      "photo": "/media/lviv-krop-okulyary.jpeg",
+      "alt": "Портрет в окулярах, ближче"
+    },
+    {
+      "photo": "/media/pf-portret-lvivska-arka.webp",
+      "alt": "В арці старого львівського двору"
+    },
+    {
+      "photo": "/media/lviv-krop-arka.jpeg",
+      "alt": "Арка, ближче"
+    },
+    {
+      "photo": "/media/chb-vulytsya-lvova.jpeg",
+      "alt": "Вулиця Львова, чорно-біле фото"
+    },
+    {
+      "photo": "/media/portret-shody-vitrazh.jpeg",
+      "alt": "На старих сходах із вітражем"
+    },
+    {
+      "photo": "/media/lviv-krop-shody.jpeg",
+      "alt": "Сходи, ближче"
+    },
+    {
+      "photo": "/media/zh-ig-a10.jpeg",
+      "alt": "Під люстрою в старій залі"
+    },
+    {
+      "photo": "/media/chb-trench-na-vitri.jpeg",
+      "alt": "Тренч на вітрі"
+    },
+    {
+      "photo": "/media/tvorche-dvi-v-okulyarah.jpeg",
+      "alt": "Двоє в окулярах"
+    },
+    {
+      "photo": "/media/zh-ig-005.jpeg",
+      "alt": "Волосся на вітрі"
+    }
+  ]
+}

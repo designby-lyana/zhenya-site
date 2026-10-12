@@ -1,0 +1,245 @@
+# Адмінка сайту (Pages CMS — https://app.pagescms.org).
+# Тут описано, які поля бачить Женя. Сайт перебудовується сам після кожного «Зберегти».
+
+media:
+  input: public/media
+  output: /media
+
+content:
+  - name: portfolio
+    label: Портфоліо
+    type: collection
+    path: src/content/portfolio
+    format: json
+    filename: "{fields.title}.json"
+    view:
+      fields: [photo, title, categories, order]
+      primary: title
+      sort: [order, title]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: title
+        label: Назва кадру
+        type: string
+        required: true
+      - name: photo
+        label: Фото
+        type: image
+        required: true
+      - name: alt
+        label: Що на фото (для пошуковиків і незрячих)
+        type: string
+      - name: categories
+        label: Категорії
+        type: reference
+        options:
+          collection: categories
+          multiple: true
+          search: name
+          label: "{name}"
+      - name: order
+        label: Порядок у сітці (менше — вище)
+        type: number
+        default: 50
+      - name: recent
+        label: Позиція у вкладці «Останні» (1 — перша; порожньо — не показувати)
+        type: number
+      - name: hidden
+        label: Сховати з сайту
+        type: boolean
+        default: false
+
+  - name: albums
+    label: Альбоми
+    type: collection
+    path: src/content/albums
+    format: json
+    filename: "{fields.title}.json"
+    view:
+      fields: [cover, title, order]
+      primary: title
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: title
+        label: Назва альбому
+        type: string
+        required: true
+      - name: cover
+        label: Обкладинка
+        type: image
+        required: true
+      - name: coverAlt
+        label: Що на обкладинці
+        type: string
+      - name: order
+        label: Порядок (менше — вище)
+        type: number
+        default: 50
+      - name: photos
+        label: Фото альбому
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{index}. {alt}"
+        fields:
+          - name: photo
+            label: Фото
+            type: image
+          - name: alt
+            label: Що на фото
+            type: string
+      - name: hidden
+        label: Сховати з сайту
+        type: boolean
+        default: false
+
+  - name: categories
+    label: Категорії
+    type: collection
+    path: src/content/categories
+    format: json
+    filename: "{fields.name}.json"
+    view:
+      fields: [name, order]
+      primary: name
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: name
+        label: Назва
+        type: string
+        required: true
+      - name: order
+        label: Порядок чіпа у фільтрі
+        type: number
+        default: 50
+
+  - name: site
+    label: Тексти сайту
+    type: file
+    path: src/data/site.json
+    format: json
+    fields:
+      - name: contacts
+        label: Контакти
+        type: object
+        fields:
+          - { name: instagram, label: Посилання на Instagram, type: string }
+          - { name: whatsapp, label: Посилання на WhatsApp, type: string }
+          - { name: phone, label: Телефон, type: string }
+          - { name: cities, label: Міста, type: string }
+          - { name: travel, label: Про виїзд, type: string }
+      - name: header
+        label: Шапка
+        type: object
+        fields:
+          - { name: name, label: Ім'я, type: string }
+          - { name: tagline, label: Підпис під ім'ям, type: string }
+          - { name: genres, label: Жанри (рядок поруч), type: string }
+          - { name: cta, label: Кнопка в шапці, type: string }
+      - name: hero
+        label: Перший екран
+        type: object
+        fields:
+          - { name: title, label: Заголовок, type: string }
+          - { name: subtitle, label: Підзаголовок, type: string }
+          - { name: facts, label: Факти під кнопками, type: string, list: true }
+          - name: pair
+            label: Два головні фото (спочатку ліве, потім праве)
+            type: object
+            list: { collapsible: { collapsed: true, summary: "{index}. {alt}" } }
+            fields:
+              - { name: photo, label: Фото, type: image }
+              - { name: alt, label: Що на фото, type: string }
+          - name: slides
+            label: Фото, що змінюються парами на першому екрані
+            type: object
+            list: { collapsible: { collapsed: true, summary: "{index}. {alt}" } }
+            fields:
+              - { name: photo, label: Фото, type: image }
+              - { name: alt, label: Що на фото, type: string }
+      - name: portfolio
+        label: Портфоліо
+        type: object
+        fields:
+          - { name: title, label: Заголовок, type: string }
+          - { name: recentNote, label: Підпис у вкладці «Останні», type: string }
+      - name: about
+        label: Про мене
+        type: object
+        fields:
+          - { name: title, label: Заголовок, type: string }
+          - { name: photo, label: Фото, type: image }
+          - { name: photoAlt, label: Що на фото, type: string }
+          - { name: paragraphs, label: Абзаци, type: text, list: true }
+      - name: prices
+        label: Ціни
+        type: object
+        fields:
+          - { name: title, label: Заголовок, type: string }
+          - name: terms
+            label: Умови (терміни, обробка)
+            type: object
+            list: true
+            fields:
+              - { name: label, label: Назва, type: string }
+              - { name: text, label: Текст, type: string }
+          - name: packages
+            label: Пакети
+            type: object
+            list: { collapsible: { collapsed: true, summary: "{name}" } }
+            fields:
+              - { name: name, label: Назва, type: string }
+              - { name: badge, label: Позначка біля назви (необов'язково), type: string }
+              - { name: where, label: Де знімаємо, type: string }
+              - { name: note, label: Примітка (необов'язково), type: string }
+              - name: tone
+                label: Колір смужки
+                type: select
+                options: { values: [bw, blue, gold] }
+              - { name: price, label: Ціна (без «грн»), type: string }
+              - { name: per, label: Підпис під ціною, type: string }
+              - name: hours
+                label: Ціни за годинами (лише для погодинної)
+                type: object
+                list: true
+                fields:
+                  - { name: hours, label: Годин, type: number }
+                  - { name: price, label: Ціна, type: string }
+                  - { name: per, label: Підпис, type: string }
+              - name: stats
+                label: Що входить
+                type: object
+                list: true
+                fields:
+                  - { name: value, label: Число, type: string }
+                  - { name: label, label: Підпис, type: string }
+      - name: contact
+        label: Блок «Напишіть мені»
+        type: object
+        fields:
+          - { name: title, label: Заголовок, type: string }
+          - { name: instagramLabel, label: Кнопка Instagram, type: string }
+          - { name: whatsappLabel, label: Кнопка WhatsApp, type: string }
+          - { name: phoneLabel, label: Кнопка телефону, type: string }
+      - { name: reviews, label: Відгуки, type: text, list: true }
+      - name: seo
+        label: Для Google і соцмереж
+        type: object
+        fields:
+          - { name: title, label: Заголовок вкладки, type: string }
+          - { name: description, label: Опис для Google, type: text }
+          - { name: shareTitle, label: Заголовок при поширенні, type: string }
+          - { name: shareDescription, label: Опис при поширенні, type: text }
+          - { name: shareImage, label: Картинка при поширенні, type: image }
+      - name: footer
+        label: Підвал
+        type: object
+        fields:
+          - { name: copyright, label: Копірайт, type: string }

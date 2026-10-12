@@ -1,0 +1,68 @@
+{
+  "title": "Розпис без поспіху",
+  "order": 1,
+  "cover": "/media/rozpys-rozmytyi-ruh.jpeg",
+  "coverAlt": "Наречені йдуть, тримаючись за руки, розмитий від руху чорно-білий кадр",
+  "photos": [
+    {
+      "photo": "/media/rozpys-0345.jpeg",
+      "alt": "Наречені піднімаються широкими сходами з балюстрадами"
+    },
+    {
+      "photo": "/media/rozpys-krop-skhody-blyzko.jpeg",
+      "alt": "Наречені йдуть сходами, ближче"
+    },
+    {
+      "photo": "/media/rozpys-0344.jpeg",
+      "alt": "Наречена веде нареченого за руку нагору сходами, крупний план рук"
+    },
+    {
+      "photo": "/media/rozpys-krop-ruky-detal.jpeg",
+      "alt": "Руки нареченої й нареченого, деталь"
+    },
+    {
+      "photo": "/media/rozpys-0348.jpeg",
+      "alt": "Наречена обіймає нареченого за плече в світлій залі"
+    },
+    {
+      "photo": "/media/rozpys-krop-obiimy-oblychchia.jpeg",
+      "alt": "Наречена з рукою на плечі нареченого, крупно"
+    },
+    {
+      "photo": "/media/rozpys-z-buketom.jpeg",
+      "alt": "Наречені обіймаються з букетом троянд серед колон"
+    },
+    {
+      "photo": "/media/rozpys-krop-buket-detal.jpeg",
+      "alt": "Букет троянд за спиною нареченого, деталь"
+    },
+    {
+      "photo": "/media/rozpys-krop-buket-poglyad.jpeg",
+      "alt": "Наречена дивиться в камеру, обіймаючи нареченого"
+    },
+    {
+      "photo": "/media/rozpys-nareceni-shtora.jpeg",
+      "alt": "Наречені майже цілуються за світлою шторою"
+    },
+    {
+      "photo": "/media/rozpys-krop-shtora-gorizont.jpeg",
+      "alt": "Наречені біля штори в залі з колонами, горизонтальний кадр"
+    },
+    {
+      "photo": "/media/rozpys-0343.jpeg",
+      "alt": "Наречені цілуються на сходах, знято згори, чорно-біле фото"
+    },
+    {
+      "photo": "/media/rozpys-krop-zgory-gorizont.jpeg",
+      "alt": "Наречені на сходах, знято згори, горизонтальний кадр"
+    },
+    {
+      "photo": "/media/rozpys-rozmytyi-ruh.jpeg",
+      "alt": "Наречені йдуть, тримаючись за руки, розмитий від руху кадр"
+    },
+    {
+      "photo": "/media/rozpys-krop-narechena-ruh.jpeg",
+      "alt": "Наречена з букетом у русі, розмитий кадр"
+    }
+  ]
+}

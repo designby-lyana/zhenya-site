@@ -1,0 +1,48 @@
+{
+  "title": "Босоніж у парку",
+  "order": 3,
+  "cover": "/media/pryroda-zhovta-sukna-park.jpeg",
+  "coverAlt": "Дівчина в жовтій сукні йде босоніж по траві в сонячному парку",
+  "photos": [
+    {
+      "photo": "/media/pryroda-zhovta-sukna-park.jpeg",
+      "alt": "Дівчина в жовтій сукні босоніж у парку"
+    },
+    {
+      "photo": "/media/park-krop-krok.jpeg",
+      "alt": "Крок по траві, ближче"
+    },
+    {
+      "photo": "/media/pf-portret-zhovta-sukna-gortenziyi.webp",
+      "alt": "Жовта сукня серед гортензій"
+    },
+    {
+      "photo": "/media/park-krop-gortenziyi.jpeg",
+      "alt": "Деталь сукні серед гортензій"
+    },
+    {
+      "photo": "/media/portret-choven-richka.jpeg",
+      "alt": "Дівчина на човні посеред річки"
+    },
+    {
+      "photo": "/media/park-krop-richka.jpeg",
+      "alt": "Річка, горизонтальний кадр"
+    },
+    {
+      "photo": "/media/pf-chb-divchyna-pole-kvity.webp",
+      "alt": "Дівчина з квітами в полі, чорно-біле фото"
+    },
+    {
+      "photo": "/media/zh-ig-a1.jpeg",
+      "alt": "Лілії і сонце, чорно-біле фото"
+    },
+    {
+      "photo": "/media/portret-oranzhereya.jpeg",
+      "alt": "Серед тропічної зелені"
+    },
+    {
+      "photo": "/media/portret-cholovik-zelen.jpeg",
+      "alt": "Портрет серед зелені"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+---
+import { img } from '../lib/img';
+interface Props {
+  src: string;
+  alt?: string;
+  sizes?: string;
+  class?: string;
+  eager?: boolean;
+}
+const { src, alt = '', sizes = '(max-width: 768px) 100vw, 50vw', class: cls, eager = false } = Astro.props;
+const i = img(src);
+---
+<img
+  src={i.src}
+  srcset={i.srcset}
+  sizes={i.srcset ? sizes : undefined}
+  width={i.width}
+  height={i.height}
+  alt={alt}
+  class={cls}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+  fetchpriority={eager ? 'high' : undefined}
+/>

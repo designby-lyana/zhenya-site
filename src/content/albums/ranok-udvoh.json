@@ -1,0 +1,48 @@
+{
+  "title": "Ранок удвох",
+  "order": 2,
+  "cover": "/media/pary-kucheryava-lizhko.jpeg",
+  "coverAlt": "Кучерява дівчина сміється, схилившись над хлопцем у ліжку",
+  "photos": [
+    {
+      "photo": "/media/pary-kucheryava-lizhko.jpeg",
+      "alt": "Кучерява дівчина сміється, схилившись над хлопцем у ліжку"
+    },
+    {
+      "photo": "/media/ranok-krop-oblychchia.jpeg",
+      "alt": "Усмішка крупним планом, ранкове світло"
+    },
+    {
+      "photo": "/media/pf-pary-ruky-teple-svitlo.webp",
+      "alt": "Рука на плечі в теплому світлі"
+    },
+    {
+      "photo": "/media/ranok-krop-ruky.jpeg",
+      "alt": "Руки, деталь"
+    },
+    {
+      "photo": "/media/pf-pary-tanets-u-zali.webp",
+      "alt": "Пара танцює в світлій залі"
+    },
+    {
+      "photo": "/media/ranok-krop-tanets.jpeg",
+      "alt": "Танець, ближче"
+    },
+    {
+      "photo": "/media/pf-pary-syluet-proty-vikna.webp",
+      "alt": "Силует пари проти вікна"
+    },
+    {
+      "photo": "/media/ranok-krop-proty-svitla.jpeg",
+      "alt": "Проти світла, горизонтальний кадр"
+    },
+    {
+      "photo": "/media/chb-bile-myako.jpeg",
+      "alt": "М’яке світло, чорно-біле фото"
+    },
+    {
+      "photo": "/media/chb-diagonal-svitla.jpeg",
+      "alt": "Діагональ світла на стіні"
+    }
+  ]
+}
