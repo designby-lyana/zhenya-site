@@ -1,0 +1,5 @@
+
+.w-tabs .tabs-menu{pointer-events:none}
+.w-tabs .tabs-menu .w-tab-link,.w-tabs .tabs-menu a,.w-tabs .tabs-menu button{pointer-events:auto}
+.w-tabs .filter-bar{position:relative;z-index:5}
+.w-tabs .filter-bar .chip,.w-tabs .filter-bar .view-btn{cursor:pointer}

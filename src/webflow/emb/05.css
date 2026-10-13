@@ -1,0 +1,99 @@
+
+/* герой: крупний план пари (фото 1K8A0024) — кадр опущено, щоб верхній край не доходив до очей */
+.hero-cell img.hf[src*="6a85d10d10ec5b807a7efc54"]{translate:0 -11%}
+/* хедер: рядок жанрів видно лише нижче героя і лише коли людина гортає вгору.
+   Гортає вниз — швидко тане (.35 с); гортає вгору — повільно проявляється з невеликою затримкою (1,1 с), приглушений (75%). */
+.hg-js .header-genres{opacity:0;transform:translateY(-4px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
+.hg-js .header-genres.is-shown{opacity:.9;transform:none}
+.hg-js .site-header .header-genres{transition:opacity .35s ease,transform .35s ease,color .5s ease}
+.hg-js .site-header .header-genres.is-shown{opacity:.75;transition:opacity 1.1s ease .15s,transform 1.1s cubic-bezier(.2,.7,.2,1) .15s,color .5s ease}
+@media (prefers-reduced-motion: reduce){.hg-js .header-genres,.hg-js .site-header .header-genres,.hg-js .site-header .header-genres.is-shown{transition:none}}
+/* ціни */
+[data-pr] .pr-price,[data-pr] .pr-stat-num,[data-pr] .pr-big,[data-pr] .pr-big-olive,[data-pr] .pr-seg-btn{font-variant-numeric:lining-nums tabular-nums}
+[data-pr] .pr-seg-btn,[data-pr] .pr-q-btn{text-decoration:none;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:color .3s ease}
+[data-pr] .pr-q-btn{justify-content:space-between}
+[data-pr] .pr-seg-btn.is-on{color:#2B2B28;font-weight:700}
+[data-pr] .pr-seg-btn:focus-visible,[data-pr] .pr-q-btn:focus-visible{outline:2px solid #7C93A6;outline-offset:3px}
+[data-pr] .pr-seg-ind{pointer-events:none;transition:left .5s cubic-bezier(.65,0,.2,1)}
+[data-pr] .pr-plus{transition:transform .5s cubic-bezier(.65,0,.2,1)}
+[data-pr] .pr-q.is-open .pr-plus{transform:rotate(45deg)}
+[data-pr] .pr-q-panel[hidden]{display:none}
+/* тултіпи: «базова обробка» і «ретуш» — текст у атрибуті data-tip; на телефоні відкривається дотиком */
+[data-pr] [data-tip]{position:relative;align-self:flex-start;cursor:help;text-decoration:underline dotted;text-decoration-color:#B4B9BD;text-underline-offset:4px;outline:0}
+[data-pr] [data-tip]::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 12px);z-index:5;width:max-content;max-width:260px;padding:10px 14px;background:#2B2B28;color:#FFFFFF;font-size:13px;line-height:1.45;border-radius:0 14px 0 0;opacity:0;transform:translateY(4px);transition:opacity .25s ease,transform .25s ease;pointer-events:none;white-space:normal;text-decoration:none}
+[data-pr] .pr-stat:nth-child(2) [data-tip]::after{left:auto;right:0}
+[data-pr] [data-tip]:hover::after,[data-pr] [data-tip]:focus::after{opacity:1;transform:none}
+[data-pr] [data-tip]:focus-visible{outline:2px solid #7C93A6;outline-offset:3px}
+/* плавна поява */
+.pr-anim [data-pr] [data-rv]{opacity:0;transform:translateY(32px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+.pr-anim [data-pr] [data-rv].is-in{opacity:1;transform:none}
+.pr-anim [data-pr] [data-rv][data-rv-photo]{opacity:1;transform:none}
+.pr-anim [data-pr] .pr-curtain,.pr-anim [data-pr] .pr-curtain-card{transform:scaleY(1);transition:transform 1.4s cubic-bezier(.65,0,.2,1) .15s}
+.pr-anim [data-pr] .is-in .pr-curtain,.pr-anim [data-pr] .is-in .pr-curtain-card,.pr-anim [data-pr] .is-in.pr-photo .pr-curtain{transform:scaleY(0)}
+.pr-anim [data-pr] .pr-photo-img{transform:scale(1.12);filter:grayscale(1) brightness(1.35) contrast(.7);transition:transform 1.8s cubic-bezier(.2,.7,.2,1) .15s,filter 1.8s ease-out .15s}
+.pr-anim [data-pr] .is-in .pr-photo-img,.pr-anim [data-pr] .is-in.pr-photo .pr-photo-img{transform:none;filter:none}
+.about-more,.pf-albums{display:none}
+/* портфоліо → «Останні»: без підпису «Свіжі зйомки — оновлюється після кожної нової сесії» */
+.recent-note{display:none!important}
+
+/* ——— ТЕЛЕФОН ———
+   Герой: рівні поля; ліва комірка — зверху (як завжди), права — знизу; заокруглені лише зовнішні кути пари.
+   (Окремі пари, де на телефоні кадри треба поміняти, — список MSWAP у скрипті героя.)
+   Рядок фактів героя: «фотографую 6 років · легко й без поспіху», нижче «Львів і Кривий Ріг».
+   Портфоліо: без заголовка; стрічка на всю ширину екрана, кадр ~86% ширини по центру (з боків видно попередній і наступний), свайп — рівно на один кадр;
+   чіпи під нею (видно одразу, одним рядком, гортаються вбік); таби — лише в режимі табів (альбоми / останні / сітка всіх робіт).
+   Висота кадрів стрічки — --pf-hm (кадр 4:5 шириною 86% екрана, але не вище 70% екрана), така ж висота в фото погодинної зйомки.
+   Дві картки в кінці стрічки («Альбоми», «Усі роботи») — однакові: лише текст, тонка рамка.
+   Про мене: фото 4:5, заокруглений лише нижній правий кут; рівні поля; рядок фактів прибрано; текст компактніший; перший абзац + «Читати далі».
+   Ціни: терміни після карток; погодинна — окрема біла картка, фото на всю ширину висотою як кадри стрічки (боки кропаються); фото двох менших карток квадратні */
+@media (max-width:767px){
+  :root{--pf-hm:min(107.5vw,70svh)}
+  .hero-media{padding-left:16px!important;padding-right:16px!important}
+  .hero-media .hero-cell-l{order:0!important;border-radius:28px 28px 0 0!important}
+  .hero-media .hero-cell-r{order:0!important;border-radius:0 0 28px 28px!important}
+  .hero-facts > :nth-child(5){order:3}
+  .hero-facts > :nth-child(4){display:none}
+  .hero-facts > :nth-child(3){order:4;flex-basis:100%;text-align:center}
+  .hero-facts > :nth-child(1) .hero-fact-strong,.hero-facts > :nth-child(5) .hero-fact-strong{font-weight:inherit}
+
+  #portfolio{padding-top:40px!important}
+  #portfolio .h-section{display:none!important}
+  .w-tabs.pf-swipe{--pf-h:var(--pf-hm)!important}
+  .w-tabs:not(.pf-m-other) .tabs-menu{display:none!important}
+  .w-tabs.pf-m-other .tabs-menu{display:flex!important;opacity:1!important;pointer-events:auto!important;transform:none!important;margin-bottom:20px}
+  .w-tabs .w-tab-pane.w--tab-active:has(> .filter-bar){display:flex!important;flex-direction:column;padding-top:0!important;height:auto!important}
+  .w-tabs .w-tab-pane > .w-dyn-list{order:1}
+  .w-tabs .w-tab-pane > .filter-bar{order:2;position:static!important;margin:18px 0 0!important;width:auto!important;transform:none!important;opacity:1!important;pointer-events:auto!important}
+  .w-tabs.pf-m-other .w-tab-pane > .filter-bar{order:0;margin:0 0 18px!important}
+  .w-tabs .w-tab-pane > .pf-gm-wrap{order:3}
+  .w-tabs .filter-bar .chips{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-right:-20px;padding-right:20px}
+  .w-tabs .filter-bar .chips::-webkit-scrollbar{display:none}
+  .w-tabs .filter-bar .chip{flex:none;white-space:nowrap}
+  /* стрічка: на всю ширину екрана; боковий відступ 7vw і кадр 86vw — кадр стоїть по центру, сусіди видно по краях */
+  .pf-film.pf-swipe .pf-sticky{scroll-snap-type:x mandatory!important;margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;padding-left:7vw!important;padding-right:7vw!important;scroll-padding-left:7vw;scroll-padding-right:7vw}
+  .pf-film.pf-swipe .pf-track > *{scroll-snap-align:start!important;scroll-snap-stop:always}
+  .pf-film.pf-swipe .pf-track .gallery-photo{max-width:86vw}
+  .pf-albums{flex:0 0 auto;height:var(--pf-h);aspect-ratio:3/4;display:flex!important;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px;padding:32px;box-sizing:border-box;border:1px solid rgba(43,43,40,.14);color:#2B2B28;text-decoration:none;font-size:15px}
+  .pf-albums b,.pf-film .pf-more b{font-family:inherit;font-weight:400;font-size:28px;line-height:1.15;letter-spacing:-.01em}
+  .pf-albums span,.pf-film .pf-more span{font-size:15px;line-height:1.4;border-bottom:1px solid currentColor;padding-bottom:2px}
+
+  .about{padding-left:16px!important;padding-right:16px!important;box-sizing:border-box;max-width:100%}
+  .about > *{min-width:0}
+  .about > :not(.about-photo){padding-left:8px!important;padding-right:8px!important}
+  .about .about-photo{width:100%!important;height:auto!important;aspect-ratio:4/5;overflow:hidden;border-radius:0 0 28px 0!important}
+  .about .about-photo img{width:100%!important;height:100%!important;object-fit:cover;object-position:50% 30%;border-radius:0!important}
+  .about .about-facts{display:none!important}
+  .about p{line-height:1.5!important;margin-bottom:12px!important}
+  .about:not(.is-open) .about-p ~ .about-p{display:none!important}
+  .about-more{all:unset;display:inline-block;cursor:pointer;margin:4px 0 0;padding-bottom:2px;font-size:15px;line-height:1.4;color:#2B2B28;border-bottom:1px solid currentColor}
+  .about-more:focus-visible{outline:2px solid #7C93A6;outline-offset:3px}
+
+  .pr-wrap > .pr-info{order:3;margin-top:0!important;margin-bottom:0!important}
+  [data-pr] .pr-info-row,[data-pr] .pr-info-label,[data-pr] .pr-info-text,[data-pr] .pr-note{line-height:1.4!important}
+  [data-pr] .pr-hero{background:#FFFFFF;box-shadow:0 1px 2px rgba(43,43,40,.04),0 14px 36px -14px rgba(43,43,40,.12);overflow:hidden}
+  [data-pr] .pr-hero .pr-hero-body{padding:28px 24px 32px!important}
+  [data-pr] .pr-photo-hero{width:100%!important;max-width:none!important;flex:none!important;align-self:stretch!important;height:var(--pf-hm)!important;max-height:none!important;aspect-ratio:auto!important}
+  [data-pr] .pr-photo-hero .pr-photo-img{background-size:cover!important}
+  [data-pr] .pr-card .pr-photo-card{height:auto!important;aspect-ratio:1/1}
+  [data-pr] .pr-cards{row-gap:32px!important}
+}

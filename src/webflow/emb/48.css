@@ -1,0 +1,46 @@
+
+/* футер поверх вайбу: прозоре тло + вуаль, що густішає донизу; зсув угору на власну висоту ставить скрипт */
+section.alive{padding-bottom:0!important}
+.site-footer{background:transparent!important;border-top:0!important;position:relative;z-index:2;isolation:isolate;color:#F2F0EA}
+.site-footer::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(43,43,40,0) 0,rgba(38,38,36,.55) 200px,rgba(32,32,30,.9) 52%,#1E1E1C 100%)}
+.fr{position:relative;z-index:2;margin:0;padding:0 0 40px}
+/* нижній рядок: контакти зліва, «Підписатись» справа; відгуки стоять одразу над ним, без лінії */
+.site-footer .footer-cols{display:grid!important;grid-template-columns:1fr auto;align-items:end;gap:32px!important;padding-top:0;border-top:0}
+.site-footer .footer-cols .footer-col-title{font-size:11px;letter-spacing:.14em;color:rgba(242,240,234,.45);margin-bottom:14px}
+.site-footer .footer-cols .footer-item{margin:0}
+.site-footer .footer-cols .footer-link{color:rgba(242,240,234,.72);font-size:15px;line-height:1.7;text-decoration:none}
+.site-footer .footer-cols a[href^="tel:"]{display:inline-block;color:#F2F0EA;font-size:22px;letter-spacing:.01em;margin-bottom:6px;transition:opacity .25s ease}
+.site-footer .footer-cols a[href^="tel:"]:hover{opacity:.7}
+/* «Підписатись»: пігулка з аватаром у кільці сторіс */
+.site-footer .footer-cols > div:has(.ig-link) .footer-col-title{display:none}
+.site-footer .ig-link{display:inline-flex!important;align-items:center;gap:14px;padding:6px 22px 6px 6px;border:1px solid rgba(242,240,234,.22);border-radius:999px;color:#F2F0EA!important;text-decoration:none;font-size:15px;line-height:1;transition:background-color .3s ease,border-color .3s ease}
+.site-footer .ig-link:hover{background:rgba(242,240,234,.08);border-color:rgba(242,240,234,.45)}
+.ig-ava{position:relative;flex:none;width:48px;height:48px;border-radius:50%;padding:2.5px}
+.ig-ava::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 210deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5,#FEDA75);transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.ig-ava img{position:relative;display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;border:2.5px solid #1E1E1C}
+.ig-link:hover .ig-ava::before{transform:rotate(200deg)}
+.ig-txt{color:#F2F0EA}
+.ig-arr{opacity:.6;transition:transform .3s ease,opacity .3s ease}
+.ig-link:hover .ig-arr{transform:translate(3px,-3px);opacity:1}
+.ig-link:focus-visible{outline:2px solid #7C93A6;outline-offset:4px}
+/* копірайт — окремий рядок по центру */
+.site-footer .footer-bottom{display:flex!important;justify-content:center;text-align:center;border-top:0!important;margin-top:56px!important;padding-top:0!important}
+.site-footer .footer-bottom-text{margin:0!important;font-size:12px;letter-spacing:.02em;color:rgba(242,240,234,.4)!important;opacity:1!important}
+@media (max-width:767px){.site-footer .footer-cols{grid-template-columns:1fr;align-items:start}}
+.fr-row{display:flex;align-items:stretch;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -80px;padding:16px 80px 24px;scroll-padding-inline:80px}
+.fr-row::-webkit-scrollbar{display:none}
+.fr-card{flex:0 0 300px;display:flex;flex-direction:column;justify-content:flex-end;scroll-snap-align:start;margin:0;background:rgba(24,24,22,.78);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.35);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.fr-card:hover{transform:translateY(-4px)}
+/* листування */
+.fr-chat{display:flex;align-items:flex-end;gap:8px;padding:28px 18px 20px}
+.fr-ava{display:none}
+.fr-msgs{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
+.fr-bub{max-width:100%;background:#3A3A37;color:#F2F0EA;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.35;letter-spacing:-.01em;padding:9px 13px;border-radius:6px 20px 20px 6px}
+.fr-bub:first-child{border-top-left-radius:20px}
+.fr-bub:last-child{border-bottom-left-radius:20px}
+.fr-bub:only-child{border-radius:20px}
+/* справжній скрін */
+.fr-img{display:block;width:100%;height:100%;object-fit:cover;object-position:bottom}
+@media (max-width:991px){.fr-row{margin:0 -48px;padding-left:48px;padding-right:48px;scroll-padding-inline:48px}}
+@media (max-width:767px){.fr-card{flex-basis:80%}.fr-row{gap:12px;margin:0 -24px;padding-left:24px;padding-right:24px;scroll-padding-inline:24px}}
+@media (prefers-reduced-motion:reduce){.fr-card,.ig-ava::before{transition:none}}

@@ -1,0 +1,5 @@
+
+.header-genres.is-shown{pointer-events:auto!important}
+.header-genres .hg-w{cursor:pointer;text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .35s ease,color .25s ease}
+@media (hover:hover){.header-genres .hg-w:hover{color:#2B2B28;background-size:100% 1px}}
+.header-genres .hg-w:focus-visible{outline:2px solid #7C93A6;outline-offset:3px}

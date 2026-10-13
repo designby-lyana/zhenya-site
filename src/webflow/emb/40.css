@@ -1,0 +1,103 @@
+
+/* Шапка: рядок жанрів стоїть рівно по центру (видно його лише після прокрутки героя, ≥992px) */
+.site-header .header-genres{position:absolute;left:50%;top:50%;translate:-50% -50%;flex:none;text-align:center;pointer-events:none}
+.site-header .nav{margin-left:auto}
+
+/* Цифри по всьому сайту — «рівні», без стрибків вгору-вниз (Raleway за замовчуванням малює їх старостильними) */
+body{font-variant-numeric:lining-nums}
+.contact-phone,a[href^="tel:"]{font-variant-numeric:lining-nums;letter-spacing:.02em}
+
+/* Ціни: нулі без скісної риски (у Fixel табличні цифри мають перекреслений нуль) */
+[data-pr] .pr-num-hero,[data-pr] .pr-num,[data-pr] .pr-stat-num,[data-pr] .pr-big,[data-pr] .pr-big-olive,[data-pr] .pr-seg-btn{font-variant-numeric:lining-nums proportional-nums!important}
+/* Ціни: активна година — скромно, без жирного */
+[data-pr] .pr-seg-btn.is-on{font-weight:500!important}
+
+/* Ціни: фото — погодинна (силует на синьому), експрес (львівська вулиця), портрети за донат */
+.pr-photo-hero .pr-photo-img{background:#1f4a5c url("https://cdn.prod.website-files.com/6a65e6828ad7099333ebb2c2/6aba43c4589a70dd9607597b_WhatsApp%20Image%202026-08-18%20at%2015.12.59%20%2812%29.jpeg") center 45%/cover no-repeat}
+.pr-photo-card .pr-photo-img.pr-tone-blue{background:#8a7658 url("https://cdn.prod.website-files.com/6a65e6828ad7099333ebb2c2/6aba43c4f850551ff44763b4_WhatsApp%20Image%202026-08-24%20at%2000.08.10%20%281%29.jpeg") center 55%/cover no-repeat}
+.pr-photo-card .pr-photo-img.pr-tone-gold{background:#2b2b28 url(https://cdn.prod.website-files.com/6a65e6828ad7099333ebb2c2/6ab3dce660b6f82d12897cce_zh-price-donat.jpg) center 30%/cover no-repeat}
+.pr-photo .pr-photo-tag{display:none}
+
+/* Ціни: відступи за наближеністю — ціна з підписом разом, групи між собою далі */
+.pr-hero-body{row-gap:28px}
+.pr-hero .pr-head{row-gap:8px}
+.pr-hero .pr-price-block{row-gap:4px}
+.pr-hero .pr-hours{margin-top:-8px}
+.pr-hero .pr-stats{padding-top:20px}
+
+/* Ціни: компактні картки — на широкому екрані фото зліва (широке, майже половина картки), текст справа */
+.pr-card-body{padding:28px 32px 32px;row-gap:18px}
+.pr-card .pr-card-head{row-gap:6px}
+.pr-card .pr-num{font-size:56px;line-height:1}
+.pr-card .pr-price-block{row-gap:0}
+.pr-card .pr-caption-row{margin-top:-2px}
+.pr-card .pr-stats{padding-top:16px}
+.pr-card .pr-stat-num{font-size:32px;line-height:1.1}
+@media (min-width:1200px){.pr-card{flex-direction:row}.pr-card .pr-photo-card{height:auto;width:46%;flex:none}.pr-card .pr-card-body{padding:28px 28px 32px}}
+@media (max-width:1199px){.pr-card .pr-photo-card{height:260px}}
+/* «Експрес-зйомка»: заокруглений нижній правий кут (в пару до верхнього лівого у фото погодинної, 40px) */
+[data-pr] .pr-card:has(.pr-tone-blue){border-bottom-right-radius:40px;overflow:hidden}
+
+/* ——— Ціни: лоск (радіуси кутів не чіпаємо) ——— */
+[data-pr] .pr-price{align-items:baseline}
+[data-pr] .pr-cur{opacity:.7;letter-spacing:.01em;line-height:1}
+[data-pr] .pr-stat-num{letter-spacing:-.02em}
+[data-pr] .pr-card{border-color:transparent;box-shadow:0 1px 2px rgba(43,43,40,.04),0 14px 36px -14px rgba(43,43,40,.12)}
+[data-pr] .pr-stats,[data-pr] .pr-faq{border-top-style:solid;border-top-color:rgba(43,43,40,.08)}
+[data-pr] .pr-info,[data-pr] .pr-q{border-bottom-style:solid;border-bottom-color:rgba(43,43,40,.08)}
+@media (min-width:992px){[data-pr] .pr-hero .pr-price-block{margin-top:clamp(32px,4vw,56px)}}
+[data-pr] .pr-eyebrow:not(.pr-eyebrow-light){font-size:12px;line-height:1.4;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#8A8F8C}
+[data-pr] .pr-name-sub{display:flex;width:max-content;margin-top:10px;padding:4px 11px;border:1px solid rgba(43,43,40,.12);border-radius:999px;font-size:13px;line-height:1.3;letter-spacing:0;color:#5C625F}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  html [data-pr] .pr-photo .pr-photo-img,html.mo [data-pr] .pr-card.pc-now .pr-photo-img{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)!important}
+  html [data-pr] .pr-photo-hero:hover .pr-photo-img,html.mo [data-pr] .pr-card.pc-now:hover .pr-photo-img,html [data-pr] .pr-card:hover .pr-photo-img{transform:scale(1.04)!important}
+}
+
+/* Про мене: фото Жені ширше й вище */
+@media (min-width:992px){
+  .about{align-items:center;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)!important}
+  .about .about-photo{width:100%!important;height:auto!important;aspect-ratio:5/6;max-height:calc(100vh - 140px)}
+  .about .about-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 38%}
+}
+
+/* Контакти */
+#contact{padding-top:160px!important;padding-bottom:160px!important;text-align:center}
+#contact .contact-title{margin-bottom:32px}
+#contact .contact-cta{display:flex!important;justify-content:center;flex-wrap:wrap;gap:12px!important}
+#contact .contact-cta a[href*="instagram.com"]{background-color:#7C93A6!important;border-color:#7C93A6!important;color:#FFFFFF!important;transition:background-color .25s ease,border-color .25s ease}
+#contact .contact-cta a[href*="instagram.com"]:hover{background-color:#6A8296!important;border-color:#6A8296!important}
+#contact .contact-cta a[href*="instagram.com"]:focus-visible{outline:2px solid #7C93A6;outline-offset:3px}
+@media (max-width:767px){#contact{padding-top:112px!important;padding-bottom:112px!important}#contact .contact-cta{flex-direction:column;align-items:stretch}}
+
+/* Вайб → футер */
+section.alive{padding-bottom:24px!important}
+.site-footer{border-top:0!important}
+.site-footer .footer-cols{display:flex!important;flex-wrap:wrap;gap:40px 120px!important}
+.site-footer .footer-cols .footer-bottom-text{margin-top:20px;opacity:.6}
+
+/* Герой на телефоні: тримаємо верх кадру */
+@media (max-width:767px){
+  .hero-cell .hero-img,.hero-cell .hf{object-position:50% 12%!important}
+  .hero-cell img.hf[src*="6a85d10d10ec5b807a7efc54"]{translate:none}
+}
+
+/* Лайтбокс: без синьої рамки фокусу */
+.w-lightbox-backdrop *:focus,.w-lightbox-backdrop *:focus-visible,.w-lightbox-backdrop:focus,.w-lightbox-control:focus,.w-lightbox-close:focus{outline:none!important;box-shadow:none!important}
+
+/* Стрічка на телефоні: кадри 4:5, крім «кола світла»; без підпису «1 із N» */
+@media (max-width:767px){
+  .pf-film.pf-swipe .pf-track > .w-dyn-item .gallery-photo{aspect-ratio:4/5!important}
+  .pf-film.pf-swipe .pf-track > .w-dyn-item:has(img[src*="kolo-svitla"]) .gallery-photo{aspect-ratio:var(--pf-ar,4/5)!important}
+  .pf-film.pf-swipe .pf-hint{display:none!important}
+}
+
+/* Телефон: ієрархія вертикальних відступів */
+@media (max-width:767px){
+  body section#about{display:none!important}
+  body #portfolio{padding-top:24px!important;padding-bottom:40px!important}
+  body #packages{padding-top:40px!important;padding-bottom:48px!important}
+  body [data-pr] .pr-wrap{row-gap:32px!important;gap:32px!important}
+  body [data-pr] .pr-wrap > .pr-info{margin-top:16px!important;margin-bottom:0!important}
+  body .about{padding-top:56px!important;padding-bottom:0!important}
+  body #contact{padding-top:80px!important;padding-bottom:80px!important}
+}

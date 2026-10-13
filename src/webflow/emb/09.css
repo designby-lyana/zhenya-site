@@ -1,0 +1,13 @@
+
+@media (max-width:767px){
+  .hero-cell img.hf[src*="hero-bile-myako"]{object-position:50% 78%!important}
+  .hero-cell img.hf[src*="hero-vulytsya-lvova"]{object-position:50% 72%!important}
+  .hero-cell img.hf[src*="hero-diagonal-svitla"]{object-position:50% 100%!important}
+  .hero-cell img.hf[src*="hero-shkiryane-palto"]{object-position:50% 42%!important}
+  .hero-cell img.hf[src*="hero-vyshyvanka-profil"]{object-position:50% 0%!important}
+  .hero-cell img.hf[src*="hero-bilyi-top"]{object-position:50% 62%!important}
+  .hero-cell img.hf[src*="6a85d10d10ec5b807a7efc54"]{translate:0 32%!important}
+}
+@media (min-width:768px){
+  .hero-cell img.hf[src*="6a85d10d10ec5b807a7efc54"]{translate:0 16%!important}
+}

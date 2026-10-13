@@ -20,6 +20,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/media
-          git diff --cached --quiet || git commit -m "Фото перенесено з Webflow"
+          git add public/media public/fonts
+          git diff --cached --quiet || git commit -m "Фото, відео й шрифти перенесено з Webflow"
           git push

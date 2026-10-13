@@ -1,0 +1,5 @@
+
+.zp .zp-note{display:flex!important;align-items:flex-start;gap:10px;text-align:left!important;margin:0 0 12px!important;padding:12px 14px!important;background:#F3F2EE;border-radius:14px;font-size:14px!important;line-height:1.4!important;color:#2B2B28!important}
+.zp .zp-note svg{flex:none;margin-top:1px}
+.zp .zp-note b{font-weight:600}
+.zp .zp-wa{margin-top:12px}

@@ -2,8 +2,9 @@
   "name": "zhenya-bychkova-site",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node scripts/optimize-images.mjs && astro dev",
-    "build": "node scripts/optimize-images.mjs && astro build",
+    "prepare-site": "node scripts/optimize-images.mjs && node scripts/localize.mjs",
+    "dev": "npm run prepare-site && astro dev",
+    "build": "npm run prepare-site && astro build",
     "preview": "astro preview"
   },
   "dependencies": {

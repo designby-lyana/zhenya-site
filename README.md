@@ -14,16 +14,23 @@ Cloudflare Pages бачить зміну і перебудовує сайт (1�
 
 ## Що де лежить
 
+Дизайн і вся поведінка — **дослівно з Webflow**: ті самі класи, стилі й ваші скрипти (плівка портфоліо, вайбовий екран, стопка відгуків, віконце «Напишіть Жені», меню на телефоні тощо). Змінено лише джерело даних — тепер це адмінка.
+
 | Що | Де |
 |---|---|
 | Роботи портфоліо | `src/content/portfolio/*.json` |
 | Альбоми | `src/content/albums/*.json` |
 | Категорії (чіпи фільтра) | `src/content/categories/*.json` |
-| Усі тексти, ціни, відгуки, контакти | `src/data/site.json` |
-| Фото | `public/media/` |
-| Стилі (дизайн-система «Блакить + Оливка») | `src/styles/global.css` |
-| Поведінка (шапка, фільтр, лайтбокс, герой) | `public/site.js` |
+| Тексти, ціни, відгуки, контакти, фото першого екрана | `src/data/site.json` |
+| Фото, відео | `public/media/` |
+| Шрифти (Fixel Display, Raleway) | `public/fonts/` |
+| Стилі Webflow (дослівно) | `src/webflow/site.css` |
+| Ваш кастомний код з Webflow (дослівно, 49 блоків) | `src/webflow/emb/` (головна), `src/webflow/album/` (альбом) |
+| Заміна рантайму Webflow: вкладки й перегляд фото | `public/wf/shim.js` |
+| Розмітка сторінок | `src/pages/index.astro`, `src/pages/albums/[slug].astro` |
 | Поля адмінки | `.pages.yml` |
+
+Вайбовий екран (35 плиток, 5 відео) і фото в картках цін задані в коді, як і у Webflow (`index.astro`, блок `zf`; `src/webflow/emb/40.css`).
 
 ## Запуск (одноразово)
 
@@ -34,7 +41,7 @@ Cloudflare Pages бачить зміну і перебудовує сайт (1�
 
 ### 2. Перенести фото з Webflow
 У репозиторії: **Actions** → «Перенести фото з Webflow» → **Run workflow**.
-За хвилину всі 80 фото з'являться в `public/media`. Поки цього не зроблено, сайт показує фото з Webflow.
+За кілька хвилин усі фото, відео й шрифти з'являться в `public/media` і `public/fonts`. Поки цього не зроблено, сайт бере їх з Webflow.
 
 ### 3. Cloudflare Pages
 1. dash.cloudflare.com → **Workers & Pages** → **Create** → **Pages** → **Connect to Git** → вибрати `zhenya-site`.

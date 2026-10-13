@@ -1,6 +1,8 @@
-// Перетворює шлях до фото (/media/…) на src + srcset.
-// Якщо легкі копії вже зроблені (scripts/optimize-images.mjs) — віддає їх.
-// Якщо фото ще не перенесене з Webflow — тимчасово показує його з Webflow CDN.
+// Робота з фото й медіа.
+// Шлях /media/... береться з public/, якщо файл уже перенесено з Webflow,
+// інакше тимчасово — з Webflow CDN (список у scripts/webflow-media.json).
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import images from '../data/images.json';
 import webflow from '../../scripts/webflow-media.json';
 
@@ -9,19 +11,31 @@ type Entry = { width: number; height: number; variants: Variant[] };
 
 const local = images as Record<string, Entry>;
 const remote = webflow as Record<string, string>;
+const PUBLIC = join(process.cwd(), 'public');
 
+/** Повна адреса медіафайлу (оригінал). */
+export function media(path: string): string {
+  if (!path || /^https?:/.test(path)) return path;
+  if (existsSync(join(PUBLIC, decodeURI(path)))) return path;
+  return remote[path] ?? path;
+}
+
+/** src + srcset для <img>: легкі WebP-копії, якщо вони є. */
 export function img(path: string) {
   const e = local[path];
   if (e && e.variants.length) {
     const last = e.variants[e.variants.length - 1];
-    return {
-      src: last.src,
-      srcset: e.variants.map((v) => `${v.src} ${v.w}w`).join(', '),
-      width: e.width,
-      height: e.height,
-    };
+    return { src: last.src, srcset: e.variants.map((v) => `${v.src} ${v.w}w`).join(', '), width: e.width, height: e.height };
   }
-  return { src: remote[path] ?? path, srcset: undefined, width: undefined, height: undefined };
+  return { src: media(path), srcset: undefined as string | undefined, width: undefined, height: undefined };
+}
+
+/** Вбудований код з Webflow (стилі/скрипти), з локальними адресами медіа. */
+const EMB = import.meta.glob('../webflow-build/*/*', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+export function embed(name: string): string {
+  const s = EMB['../webflow-build/' + (name.includes('/') ? name : 'emb/' + name)];
+  if (s === undefined) throw new Error('Немає вбудованого коду ' + name);
+  return s;
 }
 
 // Ключ категорії з того, що зберігає адмінка ("bw", "src/content/categories/bw.json" тощо)

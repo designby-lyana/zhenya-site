@@ -1,178 +1,244 @@
 ---
+// Головна сторінка. Розмітка, стилі й скрипти — дослівно з Webflow (src/webflow/),
+// дані — з адмінки (src/content, src/data/site.json).
 import { getCollection } from 'astro:content';
-import Base from '../layouts/Base.astro';
-import Photo from '../components/Photo.astro';
 import site from '../data/site.json';
-import { catKey, slugify, img } from '../lib/img';
+import { img, catKey, slugify, media as M, embed as E } from '../lib/img';
 
 const cats = (await getCollection('categories')).sort((a, b) => a.data.order - b.data.order);
 const catName = Object.fromEntries(cats.map((c) => [c.id, c.data.name]));
-
 const photos = (await getCollection('portfolio'))
   .filter((p) => !p.data.hidden)
   .sort((a, b) => a.data.order - b.data.order)
-  .map((p) => ({ ...p.data, id: p.id, cats: p.data.categories.map(catKey) }));
-
-const recent = photos
-  .filter((p) => p.recent)
-  .sort((a, b) => (a.recent ?? 0) - (b.recent ?? 0));
-
+  .map((p) => ({ ...p.data, cats: p.data.categories.map(catKey) }));
+const recent = photos.filter((p) => p.recent).sort((a, b) => (a.recent ?? 0) - (b.recent ?? 0));
 const albums = (await getCollection('albums'))
   .filter((a) => !a.data.hidden)
   .sort((a, b) => a.data.order - b.data.order)
   .map((a) => ({ ...a.data, slug: /^[a-z0-9-]+$/.test(a.id) ? a.id : slugify(a.data.title) }));
 
-// показуємо лише категорії, в яких є хоч одне фото
-const usedCats = cats.filter((c) => photos.some((p) => p.cats.includes(c.id)));
-
 const { hero, about, prices, contact, contacts: c } = site;
-const tel = `tel:${c.phone.replace(/\s/g, '')}`;
+const tel = 'tel:' + c.phone.replace(/[^\d+]/g, '');
+const lb = (src: string, group: string) => JSON.stringify({ items: [{ url: M(src), type: 'image' }], group });
+const titleParts = hero.title.split(hero.titleAccent);
 ---
-<Base>
-  <!-- ГЕРОЙ -->
-  <section class="hero" id="top">
-    <div class="hero-media" data-hero data-slides={JSON.stringify(hero.slides.map((s) => ({ src: img(s.photo).src, alt: s.alt })))}>
-      {hero.pair.map((p, i) => (
-        <figure class={`hero-cell hero-cell--${i === 0 ? 'l' : 'r'}`}>
-          <Photo src={p.photo} alt={p.alt} eager sizes="(max-width: 768px) 100vw, 50vw" />
-        </figure>
-      ))}
-      <a href="#portfolio" class="hero-dot" aria-label="До портфоліо">↓</a>
-    </div>
-
-    <div class="hero-text wrap">
-      <h1 class="hero-title">{hero.title}</h1>
-      <p class="hero-sub">{hero.subtitle}</p>
-      <div class="hero-cta">
-        <a class="btn is-primary" href={c.instagram} target="_blank" rel="noopener">Напиши в Instagram</a>
-        <a class="btn" href={c.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
-      </div>
-      <ul class="facts">{hero.facts.map((f) => <li>{f}</li>)}</ul>
-    </div>
-  </section>
-
-  <!-- ПОРТФОЛІО -->
-  <section class="section wrap reveal" id="portfolio">
-    <h2 class="h-section">{site.portfolio.title}</h2>
-
-    <div class="tabs" role="tablist" aria-label="Як показати роботи">
-      <button class="tab is-active" role="tab" aria-selected="true" data-tab="cats">Категорії</button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="albums">Альбоми</button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="recent">Останні</button>
-    </div>
-
-    <div class="pane" data-pane="cats">
-      <div class="filter-bar">
-        <div class="chips" role="group" aria-label="Категорії">
-          <button class="chip is-active" data-cat="all" aria-pressed="true">Усі</button>
-          {usedCats.map((cat) => <button class="chip" data-cat={cat.id} aria-pressed="false">{cat.data.name}</button>)}
-        </div>
-        <div class="view-switch" role="group" aria-label="Вигляд">
-          <button class="is-active" data-mode="scroll" aria-pressed="true">Горизонтальний скрол</button>
-          <button data-mode="grid" aria-pressed="false">Сітка</button>
-        </div>
-      </div>
-
-      <div class="gallery is-scroll" data-gallery>
-        {photos.map((p, i) => (
-          <figure class="shot" data-cats={p.cats.join(' ')}>
-            <a href={p.photo} class={`shot-frame${i % 5 === 1 ? ' is-round' : ''}`} data-lightbox="portfolio" data-caption={p.title}>
-              <Photo src={p.photo} alt={p.alt} sizes="(max-width: 480px) 100vw, (max-width: 1024px) 40vw, 300px" />
-            </a>
-            <figcaption>
-              <span class="shot-title">{p.title}</span>
-              <span class="cat-tags">{p.cats.map((k) => <span class="cat-tag">{catName[k]}</span>)}</span>
-            </figcaption>
-          </figure>
-        ))}
-      </div>
-      <p class="empty-note" hidden>У цій категорії поки немає фото.</p>
-    </div>
-
-    <div class="pane albums" data-pane="albums" hidden>
-      {albums.map((a, i) => (
-        <a class="album" href={`/albums/${a.slug}/`}>
-          <div class={`album-cover${i % 3 === 0 ? ' is-round' : ''}`}>
-            <Photo src={a.cover} alt={a.coverAlt} sizes="(max-width: 768px) 100vw, 33vw" />
-          </div>
-          <div class="album-name">{a.title}</div>
-          <div class="album-count">{a.photos.length} фото</div>
-        </a>
-      ))}
-    </div>
-
-    <div class="pane" data-pane="recent" hidden>
-      <p class="recent-note">{site.portfolio.recentNote}</p>
-      <div class="gallery is-scroll">
-        {recent.map((p) => (
-          <figure class="shot">
-            <a href={p.photo} class="shot-frame" data-lightbox="recent" data-caption={p.title}>
-              <Photo src={p.photo} alt={p.alt} sizes="(max-width: 480px) 100vw, 300px" />
-            </a>
-            <figcaption><span class="shot-title">{p.title}</span></figcaption>
-          </figure>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ПРО МЕНЕ -->
-  <section class="section wrap reveal" id="about">
-    <div class="about">
-      <div class="about-photo">
-        <Photo src={about.photo} alt={about.photoAlt} sizes="(max-width: 1024px) 100vw, 45vw" />
-      </div>
-      <div class="about-text">
-        <h2 class="h-section">{about.title}</h2>
-        {about.paragraphs.map((t) => <p>{t}</p>)}
-        <ul class="facts facts--left">{hero.facts.map((f) => <li>{f}</li>)}</ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ЦІНИ -->
-  <section class="section band reveal" id="prices">
-    <div class="wrap">
-      <h2 class="h-section">{prices.title}</h2>
-      <dl class="price-terms">
-        {prices.terms.map((t) => <div><dt>{t.label}</dt><dd>{t.text}</dd></div>)}
-      </dl>
-      <div class="price-cards">
-        {prices.packages.map((p, i) => (
-          <article class={`price-card tone-${p.tone}${i === 0 ? ' is-round' : ''}`} data-package>
-            <p class="price-where">{p.where}</p>
-            <h3 class="price-name">{p.name}{p.badge && <span class="price-badge">{p.badge}</span>}</h3>
-            {p.note && <p class="price-note">{p.note}</p>}
-            <p class="price-value"><span data-price>{p.price}</span> <small>грн</small></p>
-            <p class="price-per" data-per>{p.per}</p>
-            {p.hours && (
-              <div class="hours" role="group" aria-label="Скільки годин">
-                {p.hours.map((h, k) => (
-                  <button class={k === 0 ? 'is-active' : ''} aria-pressed={k === 0 ? 'true' : 'false'}
-                    data-hours-price={h.price} data-hours-per={h.per}>{h.hours}</button>
-                ))}
-              </div>
-            )}
-            <ul class="price-stats">
-              {p.stats.map((s) => <li><b>{s.value}</b><span>{s.label}</span></li>)}
-            </ul>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- КОНТАКТИ -->
-  <section class="section wrap contact reveal" id="contact">
-    <h2 class="h-section">{contact.title}</h2>
-    <div class="contact-cta">
-      <a class="btn is-primary" href={c.instagram} target="_blank" rel="noopener">{contact.instagramLabel}</a>
-      <a class="btn" href={c.whatsapp} target="_blank" rel="noopener">{contact.whatsappLabel}</a>
-      <a class="btn" href={tel}>{contact.phoneLabel}</a>
-    </div>
-  </section>
-
-  <div slot="footer-top" class="reviews" aria-label="Що кажуть після зйомки">
-    {site.reviews.map((r, i) => <p class={`bubble${i % 2 ? ' bubble--alt' : ''}`}>{r}</p>)}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<title>{site.seo.title}</title>
+<meta content={site.seo.description} name="description"/>
+<meta content={site.seo.shareTitle} property="og:title"/>
+<meta content={site.seo.shareDescription} property="og:description"/>
+<meta content={new URL(M(site.seo.shareImage), Astro.site).href} property="og:image"/>
+<meta content={site.seo.shareTitle} name="twitter:title"/>
+<meta content={site.seo.shareDescription} name="twitter:description"/>
+<meta property="og:type" content="website"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="/wf/site.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,700%7CRaleway+Dots:400&display=swap" rel="stylesheet"/>
+<script is:inline set:html={E("02.js")}></script>
+<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>
+</head>
+<body><div class="w-embed"><!-- Аватарка Жені в кнопці «Написати» у шапці (десктоп). Стоїть ПЕРЕД шапкою і малюється чистим CSS — тому видно з першого кадру, без затримки. -->
+<link rel="preload" as="image" href={M("/media/6ab4f49770d828296938d6a0_zh-ig-avatar.jpg")} fetchpriority="high">
+<style is:inline set:html={E("03.css")}></style></div><div class="site-header"><a href="#top" class="logo w-inline-block"><div class="logo-name">{site.header.name}</div><div class="logo-city">{site.header.tagline}</div></a><div data-hg="1" class="header-genres">{site.header.genres}</div><nav class="nav"><a href="#portfolio" class="nav-link">Портфоліо</a><a href="#packages" class="nav-link">Ціни</a><a href="#contact" class="nav-link">Контакти</a></nav><a href="#contact" class="btn header-cta">{site.header.cta}</a><div class="burger"><div class="burger-line"></div><div class="burger-line"></div><div class="burger-line"></div></div></div>
+<section id="top"><div class="hero-media">{hero.pair.map((p, i) => { const im = img(p.photo); return (<div class={`hero-cell hero-cell-${i === 0 ? 'l' : 'r'}`}><img src={M(p.photo)} srcset={im.srcset} sizes={im.srcset ? '100vw' : undefined} loading="lazy" alt={p.alt} class="hero-img"/></div>); })}<a href="#portfolio" class="hero-dot">↓</a><div data-hero-pool="1" class="hero-pool w-dyn-list"><div class="w-dyn-empty"><div>No items found.</div></div></div><div data-hero-pool="static">{hero.slides.map((s) => (<img src={M(s.photo)} data-scale={s.scale} data-fit={s.fit} loading="lazy" alt={s.alt}/>))}</div></div><div class="hero-text wrap"><h1 class="hero-title">{titleParts[0]}<span class="spot">{hero.titleAccent}</span>{titleParts.slice(1).join(hero.titleAccent)}</h1><p class="hero-pitch"><span class="hero-pitch-line">{hero.subtitle}</span></p><div class="hero-cta"><a href={c.instagram} class="btn is-primary">Напиши в Instagram</a><a href={c.whatsapp} class="btn">WhatsApp</a></div><div class="hero-facts">{hero.facts.map((f, i) => (<Fragment>{i > 0 && <div class="hero-fact-dot">·</div>}<div>{f.before}<span class="hero-fact-strong">{f.strong}</span>{f.after}{f.strong2 && <span class="hero-fact-strong">{f.strong2}</span>}</div></Fragment>))}</div></div></section>
+<section id="portfolio" class="section"><h2 class="h-section">{site.portfolio.title}</h2><div data-current="Tab 1" data-easing="ease" data-duration-in="300" data-duration-out="100" class="w-tabs"><div class="tabs-menu w-tab-menu" role="tablist"><a data-w-tab="Tab 1" class="tab-link w-inline-block w-tab-link w--current" id="w-tabs-0-data-w-tab-0" href="#w-tabs-0-data-w-pane-0" role="tab" aria-controls="w-tabs-0-data-w-pane-0" aria-selected="true">Категорії</a><a data-w-tab="Tab 2" class="tab-link w-inline-block w-tab-link" tabindex="-1" id="w-tabs-0-data-w-tab-1" href="#w-tabs-0-data-w-pane-1" role="tab" aria-controls="w-tabs-0-data-w-pane-1" aria-selected="false">Альбоми</a><a data-w-tab="Tab 3" class="tab-link w-inline-block w-tab-link" tabindex="-1" id="w-tabs-0-data-w-tab-2" href="#w-tabs-0-data-w-pane-2" role="tab" aria-controls="w-tabs-0-data-w-pane-2" aria-selected="false">Останні</a></div><div class="w-tab-content"><div data-w-tab="Tab 1" class="w-tab-pane w--tab-active" id="w-tabs-0-data-w-pane-0" role="tabpanel" aria-labelledby="w-tabs-0-data-w-tab-0"><div class="filter-bar"><div class="chips"><a data-cat="all" href="#" class="chip is-active">Усі</a><div class="chips-flow w-dyn-list"><div role="list" class="chips-flow w-dyn-items">{cats.map((cat) => (<div role="listitem" class="w-dyn-item"><a href="#" class="chip w-inline-block"><div>{cat.data.name}</div></a></div>))}</div></div></div><div class="view-switch"><a data-mode="scroll" href="#" class="view-btn is-active">Горизонтальний скрол</a><a data-mode="grid" href="#" class="view-btn">Сітка</a></div></div><div class="w-dyn-list"><div role="list" class="gallery w-dyn-items">{photos.map((p) => { const im = img(p.photo); return (<div role="listitem" class="w-dyn-item"><a href="#" class="gallery-link w-inline-block w-lightbox" aria-label="Відкрити фото" aria-haspopup="dialog"><div class="gallery-photo"><img src={im.src} srcset={im.srcset} sizes={im.srcset ? '(max-width: 767px) 86vw, 30vw' : undefined} loading="lazy" alt={p.alt} class="gallery-img"/><div></div></div><div class="gallery-caption">{p.title}</div><script is:inline type="application/json" class="w-json" set:html={lb(p.photo, 'portfolio')}></script></a><div class="cat-tags"><div class="w-dyn-list"><div role="list" class="w-dyn-items">{p.cats.filter((k) => catName[k]).map((k) => (<div role="listitem" class="w-dyn-item"><div class="cat-tag">{catName[k]}</div></div>))}</div></div></div></div>); })}</div></div></div><div data-w-tab="Tab 2" class="w-tab-pane" id="w-tabs-0-data-w-pane-1" role="tabpanel" aria-labelledby="w-tabs-0-data-w-tab-1"><div class="w-dyn-list"><div role="list" class="albums w-dyn-items">{albums.map((a) => { const im = img(a.cover); return (<div role="listitem" class="w-dyn-item"><div data-album={a.slug} class="album-card"><div class="album-cover"><img src={im.src} srcset={im.srcset} sizes={im.srcset ? '(max-width: 767px) 100vw, 33vw' : undefined} loading="lazy" alt={a.coverAlt} class="gallery-img"/></div><div class="album-name">{a.title}</div><div class="album-count">{a.photos.length}</div><a aria-label="Відкрити альбом" href={`/albums/${a.slug}`} class="album-hit"></a></div></div>); })}</div></div></div><div data-w-tab="Tab 3" class="w-tab-pane" id="w-tabs-0-data-w-pane-2" role="tabpanel" aria-labelledby="w-tabs-0-data-w-tab-2"><div class="recent-note">{site.portfolio.recentNote}</div><div class="w-dyn-list"><div role="list" class="gallery w-dyn-items">{recent.map((p) => { const im = img(p.photo); return (<div role="listitem" class="w-dyn-item"><a href="#" class="gallery-link w-inline-block"><div class="gallery-photo"><img src={im.src} srcset={im.srcset} sizes={im.srcset ? '(max-width: 767px) 50vw, 25vw' : undefined} loading="lazy" alt={p.alt} class="gallery-img"/><div class="gallery-overlay"></div></div><div class="gallery-caption">{p.title}</div></a></div>); })}</div></div></div></div></div></section>
+<div class="about"><div class="about-photo"><img src={M(about.photo)} srcset={img(about.photo).srcset} sizes={img(about.photo).srcset ? '(max-width: 767px) 100vw, 45vw' : undefined} loading="lazy" alt={about.photoAlt} class="gallery-img"/></div><div><div class="eyebrow about-eyebrow">{about.title}</div>{about.paragraphs.map((t) => (<p class="about-p">{t}</p>))}<div class="about-facts">{hero.facts.map((f, i) => (<Fragment>{i > 0 && <div class="hero-fact-dot">·</div>}<div>{f.before}<span class="hero-fact-strong">{f.strong}</span>{f.after}{f.strong2 && <span class="hero-fact-strong">{f.strong2}</span>}</div></Fragment>))}</div></div></div>
+<section id="about" class="section"></section><section id="packages" data-pr="1" class="section packages"><div class="w-embed w-script"><!-- Ціни v3 + хедер: стани анімації. Вмикаються лише коли працює JS.
+ТЕЛЕФОН (десктоп не змінюється): герой, рядок фактів, портфоліо (стрічка на всю ширину екрана, кадр ~86% ширини по центру, по краях видно сусідні;
+гортається по одному кадру — сама і свайпом; чіпи під нею; в кінці дві однакові текстові картки «Альбоми · N зйомок →» і «Усі роботи · N фото →»;
+режим табів — усі три вкладки сіткою; обкладинки альбомів — випадковий заокруглений кут або без нього), «Про мене» (після цін, коротко + «Читати далі»), ціни.
+Висота кадрів стрічки і фото погодинної зйомки на телефоні — однакова: --pf-hm. -->
+<script is:inline set:html={E("04.js")}></script>
+<style is:inline set:html={E("05.css")}></style>
+</div><div class="pr-wrap"><h2 class="sr-only">{prices.title}</h2><div data-rv="1" class="pr-info">{prices.terms.map((t) => (<div class="pr-info-row"><div class="pr-info-label">{t.label}</div><div class="pr-info-text">{t.text}</div></div>))}</div>{prices.packages.slice(0, 1).map((p) => (<div class="pr-hero"><div data-rv="1" data-rv-photo="1" class="pr-photo pr-photo-hero"><div class={`pr-photo-img pr-tone-${p.tone}`}></div><div class="pr-curtain"></div><div class="pr-photo-tag">{p.photoTag}</div></div><div data-rv="1" class="pr-hero-body"><div class="pr-head"><div class="pr-eyebrow">{p.where}</div><h3 class="pr-name-hero">{p.name}</h3></div><div class="pr-price-block"><div class="pr-price"><div data-pr-price="1" class="pr-num-hero">{p.price}</div><div class="pr-cur">грн</div></div><div class="pr-caption-row"><div data-pr-caption="1" class="pr-caption">{p.per}</div></div></div>{p.hours && p.hours.length > 0 && (<div class="pr-hours"><div role="group" aria-label="Тривалість зйомки" class="pr-seg"><div data-pr-ind="1" class="pr-seg-ind"></div>{p.hours.map((h) => (<a type="button" aria-label={`${h.hours} год`} data-h={h.hours} data-price={h.price} data-per={h.per} href="#" class="pr-seg-btn w-button">{h.hours}</a>))}</div></div>)}<div class="pr-stats">{p.stats.map((s) => (<div class="pr-stat"><div class="pr-stat-num">{s.value}</div>{s.tip ? <div tabindex="0" data-tip={s.tip} class="pr-stat-label">{s.label}</div> : <div class="pr-stat-label">{s.label}</div>}</div>))}</div></div></div>))}<div class="pr-cards">{prices.packages.slice(1).map((p) => (<div data-rv="1" class="pr-card"><div class="pr-photo pr-photo-card"><div class={`pr-photo-img pr-tone-${p.tone}`}></div><div class="pr-curtain-card"></div><div class="pr-photo-tag">{p.photoTag}</div></div><div class="pr-card-body"><div class="pr-head pr-card-head">{p.note ? (<Fragment><div class="pr-card-top"><div class="pr-eyebrow">{p.where}</div></div><h3 class="pr-name">{p.name}{p.badge && <span class="pr-name-sub">{p.badge}</span>}</h3><p class="pr-note">{p.note}</p></Fragment>) : (<Fragment><div class="pr-eyebrow">{p.where}</div><h3 class="pr-name">{p.name}{p.badge && <span class="pr-name-sub">{p.badge}</span>}</h3></Fragment>)}</div><div class="pr-price-block"><div class="pr-price"><div class="pr-num">{p.price}</div><div class="pr-cur">грн</div></div><div class="pr-caption-row"><div class="pr-caption">{p.per}</div></div></div><div class="pr-stats">{p.stats.map((s) => (<div class="pr-stat"><div class="pr-stat-num">{s.value}</div>{s.tip ? <div tabindex="0" data-tip={s.tip} class="pr-stat-label">{s.label}</div> : <div class="pr-stat-label">{s.label}</div>}</div>))}</div></div></div>))}</div></div>
+<div class="w-embed w-script"><!-- Хедер: рядок жанрів («види зйомок») — лише нижче героя і лише коли гортають вгору.
+Вниз — ховається після ~8px руху; вгору — проявляється після ~24px (щоб не блимав від випадкових рухів).
+ПОЗИЦІОНУВАННЯ під іменем («Фотографка · Львів · Кривий Ріг»): видно на першому екрані і в ті самі моменти, що й рядок жанрів (клас hg-up на шапці). -->
+<style is:inline set:html={E("06.css")}></style>
+<script is:inline set:html={E("07.js")}></script>
+<!-- Ціни v3: перемикач годин (ціна змінюється одразу, без «набігання»), поява при скролі.
+Ширина числа зафіксована по найширшому варіанту: цифри пропорційні (щоб нуль був без риски), тож без цього «грн» їздило б при перемиканні. -->
+<script is:inline set:html={E("08.js")}></script>
+<!-- Телефон, герой: комірки майже квадратні, фото вертикальні — для окремих кадрів своя точка кадрування (спільна — 50% 12%, у блоці «ТЕЛЕФОН»).
+Щоб підправити інший кадр: частина назви файлу + object-position (друге число: 0% — верх фото, 100% — низ).
+Десктоп: пара крупним планом (1K8A0024) зсунута вниз, щоб було видно обличчя дівчини. -->
+<style is:inline set:html={E("09.css")}></style>
+<!-- Телефон: меню за гамбургером. Світлий екран на весь телефон: «Фотографка · Львів і Кривий Ріг», великі пункти в порядку блоків на телефоні
+(Портфоліо · Ціни · Про мене · Контакти), внизу — «Напиши в Instagram», «WhatsApp», телефон. Хрестик — на місці гамбургера.
+Закривається хрестиком, Esc і після вибору пункту (тоді плавно веде до блоку). Поки меню відкрите — сторінка під ним не гортається. -->
+<style is:inline set:html={E("10.css")}></style>
+<script is:inline set:html={E("11.js")}></script>
+<!-- Портфоліо, усі екрани.
+ТАБИ (Категорії / Альбоми / Останні): після кліку по табу скрипт перевіряє, чи показалася потрібна вкладка; якщо анімація Webflow зависла —
+сам ставить активний таб і вкладку. Вкладка мʼяко проявляється, обкладинки альбомів — піднімаючись.
+«Відкрити сіткою»: на десктопі сторінка плавно доїжджає до сітки (через мʼяку прокрутку), кадри спливають хвилею.
+ДЕСКТОП: менший відступ між заголовком «Портфоліо» і плівкою; блок «Яких світлин хочеться?» — відступи в тій самій пропорції, що й на телефоні (секція ~104px). -->
+<style is:inline set:html={E("12.css")}></style>
+<script is:inline set:html={E("13.js")}></script>
+<!-- Телефон, ціни: ПОПАП «Написати Жені».
+Тап по картці пакета (крім перемикача годин і підказки «із ретушшю») → віконце: назва пакета, «Напишіть Жені» і готове перше повідомлення (його можна змінити).
+«Написати в Instagram» — копіює текст і відкриває чат з Женею (ig.me/m/…); Instagram не приймає готовий текст у посиланні, тому його просто вставляють.
+«WhatsApp» — чат одразу з цим текстом. Закрити: хрестик, тап по затемненню, Esc. На десктопі картки не відкривають попап. -->
+<style is:inline set:html={E("14.css")}></style>
+<script is:inline set:html={E("15.js")}></script>
+</div><div class="w-embed w-script"><!-- Телефон, попап цін як чат в Instagram.
+Надпис у два рядки: зверху пакет («Погодинна зйомка · 3 години»), під ним вартість.
+Замість «Напишіть Жені» + довгого пояснення — шапка чату: аватарка Жені в кольоровому кружечку Instagram (як у футері), нік і імʼя.
+Готове повідомлення — як бульбашка відправленого повідомлення в інсті (справа, синьо-фіолетова). Її можна редагувати, висота підлаштовується під текст. -->
+<style is:inline set:html={E("16.css")}></style>
+<script is:inline set:html={E("17.js")}></script></div><div class="w-embed w-script"><!-- Телефон, ФУТЕР: відступи за ієрархією. Згори 56 → відгуки → 40 → контакти (групи через 28) → 40 → тонка лінія + © → знизу 40 (+ безпечна зона iPhone).
+ДЕСКТОП, вкладка «Альбоми»: у кожної обкладинки заокруглений один випадковий кут (як на телефоні), сусідні картки не повторюються.
+ДЕСКТОП, таби портфоліо: «прилипають» під шапкою лише для плівки «Категорії». У «Альбомах» і «Останніх» — звичайний рядок над картками, не налазить на обкладинки.
+ТЕЛЕФОН, стрічка портфоліо: фото вантажаться наперед (на два екрани вперед від поточного кадру), щоб справа завжди було видно край наступного кадру
+(Safari сам не підтягує lazy-фото в горизонтальній стрічці). Поки фото не прийшло — на його місці бежева підкладка, а не біла дірка. -->
+<style is:inline set:html={E("18.css")}></style>
+<script is:inline set:html={E("19.js")}></script></div><div class="w-embed w-script"><!-- ПОВЕРНЕННЯ «НАЗАД» (усі екрани). Коли людина йде з головної (наприклад, зі сітки чи вкладки «Альбоми») в альбом,
+ми запамʼятовуємо: вкладку, сітка чи плівка, вибраний фільтр і місце на сторінці. Після «Назад» у браузері все відновлюється рівно так само.
+Зберігається лише в цій вкладці браузера і лише на 30 хв. -->
+<script is:inline set:html={E("20.js")}></script></div><div class="w-embed w-script"><!-- Хедер, рядок жанрів «Портретна, творча, сімейна. Події» — клікабельний. Кожне слово веде в портфоліо з потрібним фільтром:
+Портретна → «Портрети», Творча → «Творчі», Сімейна → «З дітьми», Події → вкладка «Альбоми» (там цілі зйомки). Щоб змінити — словник MAP нижче.
+Прокрутка зупиняється так, щоб заголовок «Портфоліо» був видно під шапкою (якщо інший скрипт збив — в кінці м’яко доводимо). -->
+<style is:inline set:html={E("21.css")}></style>
+<script is:inline set:html={E("22.js")}></script></div><div class="w-embed w-script"><!-- Хедер, кнопка «Написати»: веде одразу в чат з Женею в інсті, завжди яскрава.
+АВАТАРКА в кнопці малюється в Page Settings → Custom code → Head (щоб було видно одразу). На телефоні кнопку в шапці приховано.
+ОНОВЛЕННЯ СТОРІНКИ: завжди відкривається верх (герой). У перші ~2,5 с будь-який «не людський» скрол (iPhone/Safari) повертається нагору; якорі в адресі не залишаються.
+«Назад» з альбому працює як раніше. -->
+<style is:inline set:html={E("23.css")}></style>
+<script is:inline set:html={E("24.js")}></script></div><div class="w-embed w-script"><!-- 1) ПОРТФОЛІО, картка в кінці плівки (усі екрани). Назва: «Усі світлини» + «показати всі N разом» (N — скільки кадрів у вибраному фільтрі).
+На телефоні підпис «N фото →» ставить інший скрипт (блок «Ціни v3 + хедер»).
+2) КЛІК ПО КАРТЦІ НЕ ГОРТАЄ СТОРІНКУ. Інші скрипти (плівка і «Портфоліо, усі екрани») після кліку плавно везли сторінку до сітки — тепер ці плавні прокрутки
+ігноруються 1,5 с після кліку людини. Сітка просто стає на місце плівки. Лише якщо верх галереї опинився вище екрана (на десктопі плівка «довга»),
+сторінка миттєво, без анімації, ставить його під шапку. Вниз не гортає ніколи. «Назад» з альбому працює як раніше (програмний клік глушення не вмикає).
+3) НОМЕР ТЕЛЕФОНУ (футер, контакти): на комп'ютері клік копіює номер і на 1,6 с пише «Скопійовано ✓»; на телефоні — дзвінок, як і було.
+Кнопки без цифр («Зателефонувати») не чіпаємо. -->
+<script is:inline set:html={E("25.js")}></script></div><div class="w-embed w-script"><!-- ПРАВКИ ПІСЛЯ ВІЗУАЛЬНОЇ ПЕРЕВІРКИ (жовтень 2026).
+1) Телефон: у шапці лише імʼя + меню (аватарку-кнопку прибрано; в інсту веде меню та блоки нижче).
+2) Відступ від фактів героя до «Портфоліо» був ~190px — тепер ~116px (десктоп) і ~64px до стрічки (телефон).
+3) Ціни: «Терміни / Базова обробка / Ретуш» тепер ПІСЛЯ карток і на десктопі, лінія — над ними.
+4) © у футері: на десктопі — в темній колонці під контактами (а не поверх фото); на телефоні — зліва. -->
+<style is:inline set:html={E("26.css")}></style>
+<script is:inline set:html={E("27.js")}></script></div><div class="w-embed"><!-- Чипи фільтрів (Усі / Портрети / Творчі …) на десктопі були накриті прозорим рядком вкладок (на всю ширину) і не клікалися.
+Тепер порожнє місце рядка вкладок «прозоре» для кліку, а чипи — над ним. -->
+<style is:inline set:html={E("28.css")}></style></div><div class="w-embed w-script"><!-- ДЕСКТОП, ціни: клік по фото чи картці пакета відкриває те саме віконце, що й на телефоні: пакет + ціна, шапка чату з аватаркою Жені,
+готове повідомлення-бульбашка, «Написати в Instagram» і WhatsApp. На десктопі віконце по центру екрана.
+Не спрацьовує на перемикачі годин, підказці «із ретушшю» та посиланнях. -->
+<style is:inline set:html={E("29.css")}></style>
+<script is:inline set:html={E("30.js")}></script></div><div class="w-embed w-script"><!-- Віконце «Написати Жені» (усі екрани): Instagram не приймає готовий текст у посиланні, тому повідомлення копіюється.
+Підказка про це тепер ПОМІТНА: світла плашка з іконкою над кнопкою Instagram. Після тапу кнопка на мить пише «Скопійовано ✓». -->
+<style is:inline set:html={E("31.css")}></style>
+<script is:inline set:html={E("32.js")}></script></div><div class="w-embed"><!-- ДЕСКТОП, «Про мене»: текст був вузький (~420px) і притиснутий до фото, справа — велика пустка.
+Тепер: текстова колонка ширша (до 640px, на дуже широких екранах до 720px і трохи більший шрифт), стоїть по центру вільного місця —
+відступ від фото і до правого краю однаковий. Фото лишається високим (як погоджували). -->
+<style is:inline set:html={E("33.css")}></style></div></section><section id="contact" class="section contact"><h2 class="contact-title">{contact.title}</h2><div class="contact-cta"><a href={c.instagram} class="btn">{contact.instagramLabel}</a><a href={c.whatsapp} class="btn">{contact.whatsappLabel}</a><a href={tel} class="btn">{contact.phoneLabel}</a></div></section>
+<section id="alive" class="section alive"><div class="w-embed w-script"><!-- Вайбовий екран: темне графітове тло на всю ширину, 35 плиток (5 відео). Сітка йде аж до низу футера: футер лежить поверх неї з напівпрозорою вуаллю.
+Порядок плиток = порядок нижче. --ar на плитці задає її висоту; data-auto — пропорцію визначить сама фотографія після завантаження.
+Щоб замінити кадр: data-img = назва файлу з Assets без .jpg; відео: data-v (mp4) і data-p (обкладинка jpg).
+Десктоп (5 колонок), четверта колонка: зверху фото (плитки з data-c4) рівно до низу кадру з data-anchor (хлопець на траві). Під ними вся група — стопка відгуків, «Підписатись», контакти — притиснута до низу колонки, щоб уся вміщалася в останній екран; низ контактів — на рівні копірайту. Контакти — другорядні та напівпрозорі.
+Усі колонки фото доходять рівно до низу сторінки: останній кадр у колонці підрізається до краю. Два нижні ряди кадрів трохи приглушені (zf-dim1 / zf-dim2).
+Стопка: усі картки і сама стопка беруть висоту передньої; у задніх текст схований. Нова картка підпливає знизу із розфокусу, бульбашки з’являються по черзі.
+Коли стопка з’являється на екрані (≥ 30%), бульбашки передньої картки програються знову, перша зміна — через ~1,8 с; далі самі кожні ~3,6 с.
+ПРОКРУТКА: коли сторінка доскролена до низу, будь-який рух колеса/тачпада ВНИЗ (де завгодно на екрані) гортає відгуки по колу: ~40px руху = картка, не частіше ніж раз на 0,42 с. Перші 0,25 с після досягнення низу — пауза, щоб інерція скролу не перегортала картки випадково.
+Рух ВГОРУ з курсором СТРОГО над самою стопкою відгуків — гортає відгуки назад (сторінка стоїть). ВГОРУ поза стопкою — просто підіймає сторінку. Клавіші ↓ / PageDown / пробіл внизу сторінки — теж наступний відгук.
+Планшет і телефон — відгуки рядом у футері, контакти у футері, як були. -->
+<style is:inline set:html={E("34.css")}></style>
+<div class="zf-wrap"><div class="zf" id="zf">
+  <div class="zf-i" style="--ar:1/1" data-img="6ab3a1ada6e9f8e6fd760b5b_zh-ig-b2"></div>
+  <div class="zf-i" style="--ar:1440/1920" data-img="6ab387cd57809666194692ef_zh-ig-004"></div>
+  <div class="zf-i" style="--ar:1440/1440" data-img="6ab3932a307ae31d68dd39cb_zh-ig-a15"></div>
+  <div class="zf-i" style="--ar:720/1280" data-v="6ab3b2c23d17421fe5167867_zh-v2-opt" data-p="6ab3b2c226b5f6db0b2cc30e_zh-v2-poster"></div>
+  <div class="zf-i" style="--ar:1066/1600" data-full data-img="6a8d716cd36d31ad4c991694_portret-oranzhereya"></div>
+  <div class="zf-i" style="--ar:1440/1799" data-img="6ab392f270f8cfe04d8132af_zh-ig-a7"></div>
+  <div class="zf-i" style="--ar:1440/1440" data-img="6ab388fcf214a43a65d20cd0_zh-ig-077"></div>
+  <div class="zf-i" style="--ar:1440/1800" data-img="6ab3a1ad2bad4b284d2f15a0_zh-ig-b1"></div>
+  <div class="zf-i" style="--ar:720/1280" data-v="6ab3b2c223bc246eedc21680_zh-v3-opt" data-p="6ab3b2c31a586be30925307c_zh-v3-poster"></div>
+  <div class="zf-i" style="--ar:9/16" data-img="6ab388b4776b2468729afd0c_zh-ig-041"></div>
+  <div class="zf-i" style="--ar:1/1" data-img="6ab392f386364fe59226bdc3_zh-ig-a8"></div>
+  <div class="zf-i" style="--ar:1440/1800" data-img="6ab387ce2f76c8e575afe21b_zh-ig-088"></div>
+  <div class="zf-i" style="--ar:9/16" data-v="6ab3b2c223bc246eedc21699_zh-v5-opt" data-p="6ab3b2c31a586be3092530a6_zh-v5-poster"></div>
+  <div class="zf-i" style="--ar:1/1" data-img="6ab3a1ad69857830dcdbe9da_zh-ig-b3"></div>
+  <div class="zf-i" style="--ar:1440/1799" data-img="6ab38841b817438c02796805_zh-ig-104"></div>
+  <div class="zf-i" style="--ar:9/16" data-v="6ab3b2c2d295cb62c75d78b3_zh-v7-opt" data-p="6ab3b2c31a586be3092530bc_zh-v7-poster"></div>
+  <div class="zf-i" style="--ar:1/1" data-anchor data-img="6ab392b72344788c5c862fa7_zh-ig-a4"></div>
+  <div class="zf-i" style="--ar:3/4" data-img="6ab392f353ba318ff8d2e5a4_zh-ig-a9"></div>
+  <div class="zf-i" style="--ar:1440/1800" data-img="6ab388094a52accb540d4012_zh-ig-024"></div>
+  <div class="zf-i" style="--ar:1066/1600" data-full data-img="6a8d716b34aa20b2e845258f_tvorche-zhovtyi-dym"></div>
+  <div class="zf-i" style="--ar:1440/1800" data-img="6ab387cec00f16ab96c346a3_zh-ig-105"></div>
+  <div class="zf-i" style="--ar:720/1280" data-v="6ab3b2c1ebc7c8a328afed35_zh-v1-opt" data-p="6ab3b2c2ac2f27e8b2d6ddd2_zh-v1-poster"></div>
+  <div class="zf-i" style="--ar:1440/1800" data-img="6ab388094a52accb540d3fbd_zh-ig-023"></div>
+  <!-- нові кадри: лягають під футер -->
+  <div class="zf-i" style="--ar:4/5" data-tail data-c4 data-auto data-img="6ab3932a2344788c5c866882_zh-ig-a14"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-c4 data-auto data-img="6ab3932a4def1798195a9990_zh-ig-a12"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-c4 data-auto data-img="6ab392f27675b1def6207766_zh-ig-a6"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-auto data-img="6ab38809dcfce400a9d63587_zh-ig-084"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-auto data-img="6ab392b72ade26208a0aa467_zh-ig-a3"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-auto data-img="6ab392b74def1798195a680f_zh-ig-a2"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-c4 data-auto data-img="6ab389668d09841d37b9a6d3_zh-ig-103"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-c4 data-auto data-img="6ab389669ebeb6fb9e6af895_zh-ig-099"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-auto data-img="6ab38966f214a43a65d23d16_zh-ig-095"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-c4 data-auto data-img="6ab38966f214a43a65d23cc1_zh-ig-085"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-c4 data-auto data-img="6ab38965ea3e95a7e57da22f_zh-ig-079"></div>
+  <div class="zf-i" style="--ar:4/5" data-tail data-auto data-img="6ab388fdf214a43a65d20d1d_zh-ig-078"></div>
+</div></div>
+<script is:inline set:html={E("35.js")}></script>
+</div><div class="w-embed w-script"><!-- Херо: пари фото змінюють одна одну. Перша пара — зображення в самих комірках херо. Далі — кадри з блоку data-hero-pool="static" у порядку на сторінці (1+2 — пара, 3+4 — наступна…). data-fit / data-scale на кадрі — свій кроп.
+Свайп по герою (дотик): вліво — наступна пара, вправо — попередня; без видимих елементів. Після свайпу перетікання швидке (~0,5 с), автозміна відлічує час знову.
+На герої touch-action: pan-y — браузер не забирає горизонтальний жест (вертикальна прокрутка сторінки працює як завжди).
+MSWAP: пари, у яких НА ТЕЛЕФОНІ правий кадр стає зверху (частина назви файлу будь-якого з двох кадрів). Зараз: «біле мʼяке» + «вулиця Львова» → зверху вулиця. -->
+<style is:inline set:html={E("36.css")}></style>
+<script is:inline set:html={E("37.js")}></script>
+</div><div class="w-embed w-script"><!-- Портфоліо → «Категорії»: плівка.
+Десктоп: секція фіксується, прокрутка колесом веде кадри вбік; дійшли до кінця — сторінка йде далі (таби й чіпи їдуть вгору разом із плівкою, а не налізають на лічильник).
+Телефон і «менше руху»: звичайний свайп зі снапом.
+Чіпи фільтрують за категорією. У плівці — перші FILM_MAX кадрів, далі картка «Усі роботи» відкриває сітку.
+Лічильник під плівкою — який кадр зараз із тих, що є саме в цьому ряду («3 із 10»). -->
+<style is:inline set:html={E("38.css")}></style>
+<script is:inline set:html={E("39.js")}></script>
+</div><div class="w-embed w-script"><!-- Шапка: рядок жанрів по центру. Цифри на сайті. Ціни: фото, нулі, компактні картки, відступи, лоск. Про мене: велике й широке фото Жені. Контакти (Instagram — головна блакитна кнопка) і футер. Герой на телефоні: кроп по верху кадру.
+Перегляд фото (лайтбокс Webflow): без синьої рамки фокусу на хрестику та стрілках. Стрічка портфоліо на телефоні: усі кадри однієї ширини (4:5), крім «кола світла»; без підпису «1 із N · гортайте».
+Телефон: єдина ієрархія вертикальних відступів — між секціями ~80px, між групами всередині секції 32–48px, всередині групи 12–24px.
+Альбоми: обкладинка веде на свою сторінку /albums/слаг (слаг — у атрибуті data-album картки, привʼязаному до CMS). -->
+<style is:inline set:html={E("40.css")}></style>
+<script is:inline set:html={E("41.js")}></script></div><div class="w-embed w-script"><!-- 1) ШАПКА: коли гортають вниз — імʼя і «Написати» тьмяніші (55%); вгору або курсор на шапці — яскраві.
+2) РЯДОК ФАКТІВ: усі тези одним кольором (сірий рядка), жирність не змінюється — і в герої, і в «Про мене».
+3) ПЕРЕГЛЯД ФОТО (лайтбокс): графітове тло з розмиттям, тонкі стрілки й хрестик, маленькі мініатюри, лічильник «3 / 24».
+4) ДЕСКТОП, ПЛІВКА: свайп вбік (тачпад або перетягування мишкою) веде плівку так само, як прокрутка.
+5) ДЕСКТОП, «ПРО МЕНЕ»: фото Жені завжди високе (4:5) — висота від екрана, ширина під неї; заокруглений верхній правий кут. -->
+<style is:inline set:html={E("42.css")}></style>
+<script is:inline set:html={E("43.js")}></script></div><div class="w-embed w-script"><!-- Телефон, меню за гамбургером: пункти спокійніші — 26px замість 36px, трохи більше повітря між ними.
+Усі екрани, перегляд фото з рядка портфоліо: гортаються лише видимі кадри (узгоджена добірка або вибрана категорія), сховані (pf-off) — в окремій групі.
+Група перебудовується щоразу, коли змінюється набір видимих кадрів (чіпи, «Усі роботи»). -->
+<style is:inline set:html={E("44.css")}></style>
+<script is:inline set:html={E("45.js")}></script></div><div class="w-embed w-script"><!-- Скрол і рух по всьому сайту:
+1) м'яка інерційна прокрутка (Lenis) — лише мишка/тачпад, на телефоні нативна; якорі плавно, але ТАБИ портфоліо (теж посилання з #) не перехоплюються;
+2) поява блоків: текст підпливає з легким розмиттям, фото відкриваються «шторкою»;
+3) плівка портфоліо: стартує двома кадрами справа; кадри проявляються під скрол (зум + розфокус → чітко), усередині рамки — паралакс;
+4) ціни: картки і фото без анімації — стоять одразу;
+5) вайбовий екран: плитки проявляються з легким наближенням; шапка над вайбом і футером стає графітовою.
+Хто в налаштуваннях просив «менше руху» — нічого з цього не вмикається. -->
+<style is:inline set:html={E("46.css")}></style>
+<script is:inline src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script is:inline set:html={E("47.js")}></script>
+</div></section><div class="site-footer"><div class="w-embed w-script"><!-- Футер лежить поверх вайбової сітки (фото тягнуться до самого низу), під ним — напівпрозора графітова вуаль.
+Низ: відгуки одразу над рядком контактів (без лінії), контакти зліва, пігулка «Підписатись» з аватаром у кільці сторіс справа; копірайт по центру.
+Відгуки рівним рядком, без заголовка (на десктопі їх забирає стопка у вайбовому екрані).
+Картка виглядає як шматок листування в темній темі месенджера (темне тло, світлий текст): бульбашки вхідних повідомлень, аватарка розмита. Тексти — дослівно з листування (прибрано лише емодзі й описки), усі 10 людей із 13 скрінів. Дозвіл клієнтів є.
+Справжній скрін: замість .fr-chat вставити <img class="fr-img" src="..." alt="Відгук після зйомки"> — показується як є, в кольорі, обрізаний до розмови. -->
+<style is:inline set:html={E("48.css")}></style>
+<div class="fr" id="fr" aria-label="Що пишуть після зйомки">
+  <div class="fr-row">
+    {site.reviews.map((r) => (<figure class="fr-card"><div class="fr-chat"><span class="fr-ava"></span><div class="fr-msgs">{r.messages.map((m) => (<div class="fr-bub">{m}</div>))}</div></div></figure>))}
   </div>
-</Base>
+
+</div>
+<script is:inline set:html={E("49.js")}></script>
+</div><div class="footer-cols"><div><div class="footer-col-title">Контакти</div><div class="footer-item"><a href={tel} class="footer-link">{c.phone}</a></div><div class="footer-item"></div><div class="footer-item"><div class="footer-link">{c.cities}</div></div><div class="footer-item"><div class="footer-link">{c.travel}</div></div></div><div><div class="footer-col-title">Підписатись</div><div class="footer-item"><a href={c.instagram} class="footer-link">Instagram</a></div></div></div>
+<div class="footer-bottom"><div class="footer-bottom-text">{site.footer.copyright}</div></div></div>
+<script is:inline src="/wf/shim.js"></script>
+</body>
+</html>

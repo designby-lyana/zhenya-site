@@ -1,0 +1,11 @@
+
+@media (min-width:768px){
+  .about{column-gap:0!important}
+  .about > :nth-child(2){box-sizing:border-box;width:100%;max-width:calc(640px + 2 * clamp(32px,5vw,96px));padding:0 clamp(32px,5vw,96px);justify-self:center}
+  .about .about-p{max-width:none!important}
+  .about .about-facts{max-width:100%}
+}
+@media (min-width:1600px){
+  .about > :nth-child(2){max-width:calc(720px + 192px)}
+  .about .about-p{font-size:19px!important;line-height:1.7!important}
+}

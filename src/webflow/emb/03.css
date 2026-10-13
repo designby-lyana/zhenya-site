@@ -1,0 +1,5 @@
+
+@media (min-width:768px){
+  .site-header .header-cta{display:inline-flex!important;align-items:center;gap:10px;padding-left:8px!important}
+  .site-header .header-cta::before{content:"";flex:none;width:28px;height:28px;box-sizing:border-box;border-radius:50%;border:2px solid transparent;padding:2px;background:url("https://cdn.prod.website-files.com/6a65e6828ad7099333ebb2c2/6ab4f49770d828296938d6a0_zh-ig-avatar.jpg") center/cover no-repeat content-box,linear-gradient(#fff,#fff) padding-box,conic-gradient(from 210deg,#FEDA75,#FA7E1E,#D62976,#962FBF,#4F5BD5,#FEDA75) border-box}
+}

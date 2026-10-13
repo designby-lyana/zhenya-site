@@ -131,6 +131,7 @@ content:
         type: object
         fields:
           - { name: instagram, label: Посилання на Instagram, type: string }
+          - { name: instagramChat, label: Посилання на чат в Instagram, type: string }
           - { name: whatsapp, label: Посилання на WhatsApp, type: string }
           - { name: phone, label: Телефон, type: string }
           - { name: cities, label: Міста, type: string }
@@ -148,8 +149,17 @@ content:
         type: object
         fields:
           - { name: title, label: Заголовок, type: string }
+          - { name: titleAccent, label: Слово заголовка оливковим кольором, type: string }
           - { name: subtitle, label: Підзаголовок, type: string }
-          - { name: facts, label: Факти під кнопками, type: string, list: true }
+          - name: facts
+            label: Факти під кнопками (і в «Про мене»)
+            type: object
+            list: true
+            fields:
+              - { name: before, label: Текст перед жирним, type: string }
+              - { name: strong, label: Жирне, type: string }
+              - { name: after, label: Текст після жирного, type: string }
+              - { name: strong2, label: Друге жирне (необов'язково), type: string }
           - name: pair
             label: Два головні фото (спочатку ліве, потім праве)
             type: object
@@ -164,6 +174,11 @@ content:
             fields:
               - { name: photo, label: Фото, type: image }
               - { name: alt, label: Що на фото, type: string }
+              - { name: scale, label: Збільшення кадру (необов'язково, напр. 2.2), type: string }
+              - name: fit
+                label: Як вписати кадр (необов'язково)
+                type: select
+                options: { values: [cover, contain] }
       - name: portfolio
         label: Портфоліо
         type: object
@@ -199,6 +214,7 @@ content:
               - { name: badge, label: Позначка біля назви (необов'язково), type: string }
               - { name: where, label: Де знімаємо, type: string }
               - { name: note, label: Примітка (необов'язково), type: string }
+              - { name: photoTag, label: Службовий підпис фото, type: string }
               - name: tone
                 label: Колір смужки
                 type: select
@@ -220,6 +236,7 @@ content:
                 fields:
                   - { name: value, label: Число, type: string }
                   - { name: label, label: Підпис, type: string }
+                  - { name: tip, label: Підказка при наведенні (необов'язково), type: text }
       - name: contact
         label: Блок «Напишіть мені»
         type: object
@@ -228,7 +245,12 @@ content:
           - { name: instagramLabel, label: Кнопка Instagram, type: string }
           - { name: whatsappLabel, label: Кнопка WhatsApp, type: string }
           - { name: phoneLabel, label: Кнопка телефону, type: string }
-      - { name: reviews, label: Відгуки, type: text, list: true }
+      - name: reviews
+        label: Відгуки (одна картка = одна людина)
+        type: object
+        list: { collapsible: { collapsed: true, summary: "{index}" } }
+        fields:
+          - { name: messages, label: Повідомлення, type: text, list: true }
       - name: seo
         label: Для Google і соцмереж
         type: object

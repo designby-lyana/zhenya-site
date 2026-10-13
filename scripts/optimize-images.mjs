@@ -1,7 +1,7 @@
 // Робить легкі копії фото під різні екрани (480 / 960 / 1600 px, WebP).
 // Запускається автоматично перед кожною збіркою сайту (npm run build).
 // Оригінали з public/media лишаються недоторканими.
-import { readdir, mkdir, stat, writeFile } from 'node:fs/promises';
+import { readdir, mkdir, stat, writeFile, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -13,7 +13,22 @@ const EXT = /\.(jpe?g|png|webp|avif)$/i;
 
 await mkdir(OUT, { recursive: true });
 const manifest = {};
-const files = existsSync(SRC) ? (await readdir(SRC)).filter((f) => EXT.test(f)) : [];
+// беремо лише фото, на які посилається контент (портфоліо, альбоми, тексти сайту)
+async function referenced() {
+  const out = new Set();
+  const scan = async (dir) => {
+    if (!existsSync(dir)) return;
+    for (const e of await readdir(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) await scan(p);
+      else if (p.endsWith('.json')) for (const m of (await readFile(p, 'utf8')).matchAll(/"\/media\/([^"]+)"/g)) out.add(m[1]);
+    }
+  };
+  await scan('src/content'); await scan('src/data');
+  return out;
+}
+const refs = await referenced();
+const files = existsSync(SRC) ? (await readdir(SRC)).filter((f) => EXT.test(f) && refs.has(f)) : [];
 
 let made = 0;
 for (const file of files) {

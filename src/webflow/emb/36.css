@@ -1,0 +1,40 @@
+
+[data-hero-pool]{display:none!important}
+.hero-cell .hf{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.6s ease;pointer-events:none;will-change:opacity,transform;backface-visibility:hidden}
+.hero-cell .hf.on{opacity:1;animation:hfk 9s ease-out both}
+.hero-cell .hf.on.out{opacity:0}
+.hero-cell .hf.fast{transition-duration:.5s}
+.hero-cell .hero-img.kb{animation:hfk 9s ease-out both}
+@keyframes hfk{from{transform:scale(1.06)}to{transform:scale(1)}}
+@media (max-width:767px){.hero-media{touch-action:pan-y;-webkit-user-select:none;user-select:none}}
+@media (prefers-reduced-motion:reduce){.hero-cell .hf,.hero-cell .hero-img{animation:none!important;transition:none!important}}
+
+/* Портфоліо — таби: замість сірої плашки Webflow тонка лінія під активним табом */
+.tab-link,.tab-link.w--current{background-color:transparent!important;position:relative}
+.tab-link::after{content:'';position:absolute;left:0;right:0;bottom:-1.5px;height:1.5px;background:#2B2B28;transform:scaleX(0);transform-origin:left center;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.tab-link:hover{color:#2B2B28}
+.tab-link.w--current{color:#2B2B28}
+.tab-link.w--current::after{transform:scaleX(1)}
+.tab-link:focus{outline:0}
+.tab-link:focus-visible{outline:1.5px solid #2B2B28;outline-offset:6px}
+@media (prefers-reduced-motion:reduce){.tab-link::after{transition:none}}
+/* Портфоліо — таби зліва, фільтр-чіпи справа в одному рядку, поки вони вміщаються (клас fb-inline ставить скрипт нижче; якщо не вміщаються — одне під одним) */
+.w-tabs.fb-inline .w-tab-content{overflow:visible}
+.w-tabs.fb-inline .w-tab-pane:has(> .filter-bar){padding-top:32px}
+.w-tabs.fb-inline .w-tab-pane > .filter-bar{position:absolute;top:-41px;right:0;margin:0;width:auto}
+.w-tabs.fb-inline .w-tab-pane > .filter-bar .chips{flex-wrap:nowrap}
+
+/* Шапка — матове скло: текст під нею розмивається, а не зрізається; лінія — лише після прокрутки */
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .site-header{background-color:rgba(255,255,255,.72)!important;-webkit-backdrop-filter:saturate(1.6) blur(16px);backdrop-filter:saturate(1.6) blur(16px)}
+}
+.site-header{border-bottom-color:transparent!important;transition:border-color .3s ease,background-color .3s ease}
+.site-header.is-scrolled{border-bottom-color:rgba(43,43,40,.08)!important}
+/* Після прокрутки в шапці лишаються тільки лого (ім’я), рядок жанрів і «Написати» — на всіх екранах */
+.site-header .logo-name,.site-header .logo-city,.site-header .nav{transition:opacity .28s ease,transform .32s cubic-bezier(.22,.61,.36,1),visibility .28s}
+.site-header.is-scrolled .logo-city{opacity:0;visibility:hidden}
+.site-header.is-scrolled .logo-name{transform:translateY(6.5px)}
+.site-header .burger{transition:opacity .28s ease,visibility .28s}
+.site-header.is-scrolled:not(:has(.is-open,.w--open)) .nav,
+.site-header.is-scrolled:not(:has(.is-open,.w--open)) .burger{opacity:0;visibility:hidden;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.site-header .logo-name,.site-header .logo-city,.site-header .nav,.site-header .burger{transition:none}}

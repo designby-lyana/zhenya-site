@@ -1,0 +1,7 @@
+
+@media (max-width:767px){
+.album-cta{text-align:center}
+.album-cta-text{margin-left:auto;margin-right:auto;max-width:22ch}
+.album-cta-row{display:flex!important;flex-direction:column!important;align-items:center!important;gap:12px!important}
+.album-cta-row .btn{width:100%!important;max-width:320px!important;box-sizing:border-box;justify-content:center;text-align:center;margin:0!important}
+}

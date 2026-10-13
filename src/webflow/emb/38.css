@@ -1,0 +1,38 @@
+
+.pf-film .w-tab-content{overflow:visible}
+.pf-film-sec{overflow-x:clip}
+.pf-film .gallery.pf-track{display:flex!important;flex-wrap:nowrap;gap:18px;grid-template-columns:none;width:max-content;will-change:transform}
+.pf-film .pf-track>.w-dyn-item{flex:0 0 auto;width:min-content;display:flex;flex-direction:column}
+.pf-film .pf-track .gallery-photo{align-self:flex-start;height:var(--pf-h);width:auto;aspect-ratio:var(--pf-ar,4/5)}
+.pf-film .pf-track .gallery-img{width:100%;height:100%;object-fit:cover;transform-origin:var(--pf-zo,50% 50%)}
+.pf-film.pf-swipe .pf-track .gallery-img{transform:scale(var(--pf-zoom,1))}
+.pf-film .pf-track>.w-dyn-item.pf-off{display:none!important}
+.pf-film .pf-sticky{position:sticky;top:var(--pf-top);overflow:visible}
+.pf-more{flex:0 0 auto;height:var(--pf-h);aspect-ratio:3/4;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px;padding:32px;border:1px solid rgba(43,43,40,.14);color:#2B2B28;text-decoration:none;font-size:15px;transition:background-color .3s ease}
+.pf-more:hover{background:rgba(124,147,166,.08)}
+.pf-more b{font-family:inherit;font-weight:400;font-size:clamp(24px,2.2vw,32px);line-height:1.15;letter-spacing:-.01em}
+.pf-more span{border-bottom:1px solid currentColor;padding-bottom:2px}
+.pf-hint{display:flex;align-items:center;gap:14px;margin-top:18px;font-size:13px;color:rgba(43,43,40,.55)}
+.pf-count{font-variant-numeric:tabular-nums lining-nums}
+.pf-bar{flex:0 0 120px;height:1px;background:rgba(43,43,40,.15);position:relative;overflow:hidden}
+.pf-bar i{position:absolute;inset:0;background:#2B2B28;transform-origin:left;transform:scaleX(0)}
+.gallery .w-dyn-item.pf-off{display:none!important}
+.pf-gm-wrap{display:flex;justify-content:center;margin-top:40px}
+.pf-gm{display:inline-flex;align-items:center;padding:14px 28px;border:1px solid rgba(43,43,40,.25);border-radius:999px;color:#2B2B28;text-decoration:none;font-size:15px;transition:background-color .25s ease,border-color .25s ease}
+.pf-gm:hover{background:rgba(124,147,166,.1);border-color:#2B2B28}
+.pf-gm:focus-visible{outline:2px solid #7C93A6;outline-offset:3px}
+/* інструменти (таби й чіпи): спершу лише фото, інструментів не видно зовсім; проявляються напівпрозорими, коли людина трохи прогляне плівку; поруч із мишкою — на 100% */
+.pf-film:not(.pf-swipe) .tabs-menu{position:sticky;top:calc(var(--pf-top) - 80px);z-index:3}
+.pf-film.fb-inline:not(.pf-swipe) .w-tab-pane > .filter-bar{position:sticky;top:calc(var(--pf-top) - 97px);margin:-41px 0 0 auto;width:max-content;z-index:3}
+.pf-tools-in .tabs-menu,.pf-tools-in .filter-bar{transition:opacity .9s ease}   /* до появи — без переходу, щоб не «блимали» при завантаженні */
+.pf-tools-wait .tabs-menu,.pf-tools-wait .filter-bar{opacity:0;pointer-events:none}
+.pf-tools-in .tabs-menu,.pf-tools-in .filter-bar{opacity:.4}
+.w-tabs.pf-tools-in.pf-tools-on .tabs-menu,.w-tabs.pf-tools-in.pf-tools-on .filter-bar,.w-tabs .tabs-menu:focus-within,.w-tabs .filter-bar:focus-within{opacity:1;transition-duration:.25s}
+@media (prefers-reduced-motion:reduce){.w-tabs .tabs-menu,.w-tabs .filter-bar{transition:none}}
+/* свайп: телефон і «менше руху» */
+.pf-film.pf-swipe .pf-sticky{position:relative;top:auto;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-right:-20px;padding-right:20px}
+.pf-film.pf-swipe .pf-sticky::-webkit-scrollbar{display:none}
+.pf-film.pf-swipe .pf-track{transform:none!important;gap:10px}
+.pf-film.pf-swipe .pf-track>*{scroll-snap-align:start}
+.pf-film.pf-swipe .pf-bar{display:none}
+@media (prefers-reduced-motion:reduce){.pf-more{transition:none}}

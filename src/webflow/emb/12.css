@@ -1,0 +1,15 @@
+
+@keyframes pfIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pfFade{from{opacity:0}to{opacity:1}}
+.w-tabs .w-tab-pane.w--tab-active{animation:pfFade .45s ease both}
+.w-tab-pane .album-card{animation:pfIn .7s cubic-bezier(.2,.7,.2,1) both}
+.w-tab-pane .album-card:nth-child(2),.w-tab-pane .w-dyn-item:nth-child(2) .album-card{animation-delay:.06s}
+.w-tab-pane .w-dyn-item:nth-child(3) .album-card{animation-delay:.12s}
+.w-tab-pane .w-dyn-item:nth-child(4) .album-card{animation-delay:.18s}
+.w-tab-pane .w-dyn-item:nth-child(n+5) .album-card{animation-delay:.24s}
+@media (prefers-reduced-motion:reduce){.w-tabs .w-tab-pane.w--tab-active,.w-tab-pane .album-card{animation:none!important}}
+@media (min-width:768px){
+  #portfolio .tabs-menu{margin-top:10px!important}
+  .w-tabs.fb-inline .w-tab-pane:has(> .filter-bar){padding-top:10px!important}
+  body #contact{padding-top:104px!important;padding-bottom:104px!important}
+}

@@ -1,9 +1,8 @@
 ---
+// Сторінка альбому. Розмітка й вбудований код — дослівно з Webflow, фото — з адмінки.
 import { getCollection } from 'astro:content';
-import Base from '../../layouts/Base.astro';
-import Photo from '../../components/Photo.astro';
 import site from '../../data/site.json';
-import { slugify } from '../../lib/img';
+import { img, slugify, media as M, embed as E } from '../../lib/img';
 
 export async function getStaticPaths() {
   const albums = (await getCollection('albums')).filter((a) => !a.data.hidden);
@@ -14,27 +13,34 @@ export async function getStaticPaths() {
 }
 const { album } = Astro.props;
 const c = site.contacts;
+const cover = img(album.cover);
 ---
-<Base title={`${album.title} — ${site.header.name}`} description={album.coverAlt}>
-  <section class="section wrap album-page">
-    <a class="link-more back" href="/#portfolio">← Усі альбоми</a>
-    <h1 class="h-section">{album.title}</h1>
-    <p class="lead">{album.photos.length} фото</p>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<title>{album.title} — {site.header.name}</title>
+<meta content={`${album.title}. ${site.seo.description}`} name="description"/>
+<meta content={`${album.title} — ${site.header.name}`} property="og:title"/>
+<meta content={new URL(M(album.cover), Astro.site).href} property="og:image"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="/wf/site.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,700%7CRaleway+Dots:400&display=swap" rel="stylesheet"/>
+<script is:inline set:html={E("02.js")}></script>
+<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>
+</head>
+<body><main class="album-page"><div class="album-bar"><a href="/#portfolio" class="album-back">← Усі альбоми</a><a href="/" class="album-brand">{site.header.name}</a></div><header class="album-head"><div class="album-eyebrow">Альбом</div><h1 class="album-title">{album.title}</h1></header><div class="album-cover-wrap"><img src={cover.src} srcset={cover.srcset} sizes={cover.srcset ? '100vw' : undefined} loading="lazy" alt={album.coverAlt} class="album-cover-img"/></div><div class="album-gallery-slot"><div class="w-dyn-list"><div role="list" class="w-dyn-items">{album.photos.map((p) => { const im = img(p.photo); return (<div role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src={im.src} srcset={im.srcset} sizes={im.srcset ? '(max-width: 991px) 50vw, 33vw' : undefined} loading="lazy" alt={p.alt}/></div>); })}</div>{album.photos.length === 0 && <div class="w-dyn-empty"><div>No items found.</div></div>}</div><div class="w-embed w-script"><!-- Сторінка альбому: фото з поля «Фото альбому» двома колонками (на широких екранах три), з’являються мʼяко.
+Заглушка «Альбом ще наповнюється» ховається, якщо в альбомі є фото.
+ПЕРЕГЛЯД НА ВЕСЬ ЕКРАН (як у рядку портфоліо): тап/клік по фото → графітове тло з розмиттям, фото по центру, тонкі стрілки й хрестик, лічильник «3 / 15»,
+мініатюри знизу (на десктопі). Гортання: стрілки, свайп, клавіші ← →; закрити — хрестик, Esc, клік по тлу. -->
 
-    <div class="album-grid">
-      {album.photos.map((p, i) => (
-        <a href={p.photo} class={`album-shot${i % 6 === 2 ? ' is-round' : ''}`} data-lightbox="album" data-caption={p.alt}>
-          <Photo src={p.photo} alt={p.alt} sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-        </a>
-      ))}
-    </div>
+<style is:inline set:html={E("album/01.css")}></style>
 
-    <div class="contact album-contact">
-      <h2 class="h-section">{site.contact.title}</h2>
-      <div class="contact-cta">
-        <a class="btn is-primary" href={c.instagram} target="_blank" rel="noopener">{site.contact.instagramLabel}</a>
-        <a class="btn" href={c.whatsapp} target="_blank" rel="noopener">{site.contact.whatsappLabel}</a>
-      </div>
-    </div>
-  </section>
-</Base>
+<script is:inline set:html={E("album/02.js")}></script></div><div class="w-embed"><!-- Мобайл: блок «Хочеться так само?» по центру, кнопки Instagram і WhatsApp однакової ширини одна під одною. -->
+
+<style is:inline set:html={E("album/03.css")}></style></div></div><div class="album-soon">Альбом ще наповнюється — скоро тут буде вся зйомка.</div><div class="album-cta"><p class="album-cta-text">Хочеться так само? Напишіть мені — підберемо дату й місце.</p><div class="album-cta-row"><a href={c.instagram} class="btn is-primary">Написати в Instagram</a><a href={c.whatsapp} class="btn">WhatsApp</a></div></div></main>
+<script is:inline src="/wf/shim.js"></script>
+</body>
+</html>

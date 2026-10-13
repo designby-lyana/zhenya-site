@@ -1,0 +1,14 @@
+
+@media (max-width:767px){
+  .site-header .header-cta{display:none!important}
+  #portfolio{padding-top:0!important}
+  #top .hero-text.wrap{padding-bottom:16px!important}
+  .site-footer .footer-bottom,.site-footer .footer-bottom-text{text-align:left!important}
+}
+@media (min-width:768px){
+  #portfolio{padding-top:0!important}
+  .zf-side .footer-bottom{margin:28px 0 0!important;padding:0!important;text-align:left!important;border:0!important}
+  .zf-side .footer-bottom-text{text-align:left!important;font-size:12px;opacity:.6}
+  body.zf-fb-moved .site-footer{display:none!important}
+}
+.pr-wrap .pr-info{order:9!important;border-bottom:0!important;margin:8px 0 0!important;padding:24px 0 0!important;border-top:1px solid rgba(43,43,40,.08)!important}
