@@ -1,6 +1,8 @@
 # Сайт Євгенії Бичкової
 
-Портфоліо фотографки. Код — [Astro](https://astro.build), хостинг — Cloudflare Pages (безкоштовно), адмінка — [Pages CMS](https://pagescms.org) (безкоштовно).
+Портфоліо фотографки. Код — [Astro](https://astro.build), хостинг — Cloudflare Workers (безкоштовно), адмінка — власна, на `/admin` (див. **[ADMIN.md](ADMIN.md)**).
+
+> Нижче — історія першого запуску з Pages CMS. Актуальна адмінка і як її налаштувати — в ADMIN.md.
 
 ## Як це працює
 

@@ -1,0 +1,183 @@
+{
+  "tiles": [
+    {
+      "img": "6ab3a1ada6e9f8e6fd760b5b_zh-ig-b2",
+      "ar": "1/1"
+    },
+    {
+      "img": "6ab387cd57809666194692ef_zh-ig-004",
+      "ar": "1440/1920"
+    },
+    {
+      "img": "6ab3932a307ae31d68dd39cb_zh-ig-a15",
+      "ar": "1440/1440"
+    },
+    {
+      "video": "6ab3b2c23d17421fe5167867_zh-v2-opt",
+      "poster": "6ab3b2c226b5f6db0b2cc30e_zh-v2-poster",
+      "ar": "720/1280"
+    },
+    {
+      "img": "6a8d716cd36d31ad4c991694_portret-oranzhereya",
+      "ar": "1066/1600",
+      "full": true
+    },
+    {
+      "img": "6ab392f270f8cfe04d8132af_zh-ig-a7",
+      "ar": "1440/1799"
+    },
+    {
+      "img": "6ab388fcf214a43a65d20cd0_zh-ig-077",
+      "ar": "1440/1440"
+    },
+    {
+      "img": "6ab3a1ad2bad4b284d2f15a0_zh-ig-b1",
+      "ar": "1440/1800"
+    },
+    {
+      "video": "6ab3b2c223bc246eedc21680_zh-v3-opt",
+      "poster": "6ab3b2c31a586be30925307c_zh-v3-poster",
+      "ar": "720/1280"
+    },
+    {
+      "img": "6ab388b4776b2468729afd0c_zh-ig-041",
+      "ar": "9/16"
+    },
+    {
+      "img": "6ab392f386364fe59226bdc3_zh-ig-a8",
+      "ar": "1/1"
+    },
+    {
+      "img": "6ab387ce2f76c8e575afe21b_zh-ig-088",
+      "ar": "1440/1800"
+    },
+    {
+      "video": "6ab3b2c223bc246eedc21699_zh-v5-opt",
+      "poster": "6ab3b2c31a586be3092530a6_zh-v5-poster",
+      "ar": "9/16"
+    },
+    {
+      "img": "6ab3a1ad69857830dcdbe9da_zh-ig-b3",
+      "ar": "1/1"
+    },
+    {
+      "img": "6ab38841b817438c02796805_zh-ig-104",
+      "ar": "1440/1799"
+    },
+    {
+      "video": "6ab3b2c2d295cb62c75d78b3_zh-v7-opt",
+      "poster": "6ab3b2c31a586be3092530bc_zh-v7-poster",
+      "ar": "9/16"
+    },
+    {
+      "img": "6ab392b72344788c5c862fa7_zh-ig-a4",
+      "ar": "1/1",
+      "anchor": true
+    },
+    {
+      "img": "6ab392f353ba318ff8d2e5a4_zh-ig-a9",
+      "ar": "3/4"
+    },
+    {
+      "img": "6ab388094a52accb540d4012_zh-ig-024",
+      "ar": "1440/1800"
+    },
+    {
+      "img": "6a8d716b34aa20b2e845258f_tvorche-zhovtyi-dym",
+      "ar": "1066/1600",
+      "full": true
+    },
+    {
+      "img": "6ab387cec00f16ab96c346a3_zh-ig-105",
+      "ar": "1440/1800"
+    },
+    {
+      "video": "6ab3b2c1ebc7c8a328afed35_zh-v1-opt",
+      "poster": "6ab3b2c2ac2f27e8b2d6ddd2_zh-v1-poster",
+      "ar": "720/1280"
+    },
+    {
+      "img": "6ab388094a52accb540d3fbd_zh-ig-023",
+      "ar": "1440/1800"
+    },
+    {
+      "img": "6ab3932a2344788c5c866882_zh-ig-a14",
+      "ar": "4/5",
+      "tail": true,
+      "c4": true,
+      "auto": true
+    },
+    {
+      "img": "6ab3932a4def1798195a9990_zh-ig-a12",
+      "ar": "4/5",
+      "tail": true,
+      "c4": true,
+      "auto": true
+    },
+    {
+      "img": "6ab392f27675b1def6207766_zh-ig-a6",
+      "ar": "4/5",
+      "tail": true,
+      "c4": true,
+      "auto": true
+    },
+    {
+      "img": "6ab38809dcfce400a9d63587_zh-ig-084",
+      "ar": "4/5",
+      "tail": true,
+      "auto": true
+    },
+    {
+      "img": "6ab392b72ade26208a0aa467_zh-ig-a3",
+      "ar": "4/5",
+      "tail": true,
+      "auto": true
+    },
+    {
+      "img": "6ab392b74def1798195a680f_zh-ig-a2",
+      "ar": "4/5",
+      "tail": true,
+      "auto": true
+    },
+    {
+      "img": "6ab389668d09841d37b9a6d3_zh-ig-103",
+      "ar": "4/5",
+      "tail": true,
+      "c4": true,
+      "auto": true
+    },
+    {
+      "img": "6ab389669ebeb6fb9e6af895_zh-ig-099",
+      "ar": "4/5",
+      "tail": true,
+      "c4": true,
+      "auto": true
+    },
+    {
+      "img": "6ab38966f214a43a65d23d16_zh-ig-095",
+      "ar": "4/5",
+      "tail": true,
+      "auto": true
+    },
+    {
+      "img": "6ab38966f214a43a65d23cc1_zh-ig-085",
+      "ar": "4/5",
+      "tail": true,
+      "c4": true,
+      "auto": true
+    },
+    {
+      "img": "6ab38965ea3e95a7e57da22f_zh-ig-079",
+      "ar": "4/5",
+      "tail": true,
+      "c4": true,
+      "auto": true
+    },
+    {
+      "img": "6ab388fdf214a43a65d20d1d_zh-ig-078",
+      "ar": "4/5",
+      "tail": true,
+      "auto": true
+    }
+  ]
+}

@@ -6,9 +6,11 @@
   var rt; function later(){ clearTimeout(rt); rt=setTimeout(lay,100); }
   var tiles=[].slice.call(box.querySelectorAll(".zf-i"));
   tiles.forEach(function(el){
-    var b=el.getAttribute("data-img"), v=el.getAttribute("data-v");
-    if(b){ var im=document.createElement("img"); im.alt=""; im.loading="lazy"; im.decoding="async";
-      if(el.hasAttribute("data-full")) im.src=C+b+".jpg";
+    var b=el.getAttribute("data-img"), v=el.getAttribute("data-v"), s=el.getAttribute("data-src");
+    if(b||s){ var im=document.createElement("img"); im.alt=""; im.loading="lazy"; im.decoding="async";
+      /* фото, додане через адмінку: готові адреси з data-src / data-srcset */
+      if(s){ im.src=s; var ss=el.getAttribute("data-srcset"); if(ss){ im.srcset=ss; im.sizes="(max-width:767px) 50vw, (max-width:991px) 33vw, 20vw"; } }
+      else if(el.hasAttribute("data-full")) im.src=C+b+".jpg";
       else { im.srcset=C+b+"-p-500.jpg 500w, "+C+b+"-p-800.jpg 800w, "+C+b+"-p-1080.jpg 1080w"; im.sizes="(max-width:767px) 50vw, (max-width:991px) 33vw, 20vw"; im.src=C+b+"-p-500.jpg"; }
       if(el.hasAttribute("data-auto")) im.addEventListener("load",function(){ if(im.naturalWidth){ el.style.setProperty("--ar",im.naturalWidth+"/"+im.naturalHeight); el.removeAttribute("data-auto"); later(); } });
       el.appendChild(im); }

@@ -1,0 +1,27 @@
+// Налаштування Cloudflare Worker, який віддає сайт і адмінку.
+// Сайт — статичні файли з dist/ (збирає Astro). Адмінці потрібен ще маленький сервер: worker/index.js відповідає лише на /api/*.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "zhenya-bychkova",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  // nodejs_compat — для швидкого перетворення фото в base64 (Buffer), щоб не впертися в ліміт часу процесора
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  // Сховище для чернетки адмінки й щойно завантажених фото. Створюється автоматично під час першого розгортання.
+  "kv_namespaces": [{ "binding": "ADMIN_KV" }],
+  "vars": {
+    "GITHUB_OWNER": "designby-lyana",
+    "GITHUB_REPO": "zhenya-site",
+    "GITHUB_BRANCH": "main",
+    "SITE_URL": "https://zhenya-bychkova.r-kharuzina.workers.dev"
+  },
+  // Секрети (GITHUB_TOKEN, ACCESS_TEAM_DOMAIN, ACCESS_AUD, ALLOWED_EMAILS) задаються в панелі Cloudflare
+  // і не зберігаються в коді. keep_vars — щоб розгортання їх не стирало.
+  "keep_vars": true,
+  "observability": { "enabled": true }
+}
