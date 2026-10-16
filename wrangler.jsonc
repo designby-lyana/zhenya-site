@@ -20,6 +20,16 @@
     "GITHUB_BRANCH": "main",
     "SITE_URL": "https://zhenya-bychkova.r-kharuzina.workers.dev"
   },
+  // Тестові збірки інших гілок (не main) Cloudflare розгортає командою `wrangler preview` — їй потрібен окремий блок налаштувань.
+  // Змінні ті самі; адмінку на тестовій адресі не використовуємо — лише дивимось, як виглядає сайт.
+  "previews": {
+    "vars": {
+      "GITHUB_OWNER": "designby-lyana",
+      "GITHUB_REPO": "zhenya-site",
+      "GITHUB_BRANCH": "main",
+      "SITE_URL": "https://zhenya-bychkova.r-kharuzina.workers.dev"
+    }
+  },
   // Секрети (GITHUB_TOKEN, ACCESS_TEAM_DOMAIN, ACCESS_AUD, ALLOWED_EMAILS) задаються в панелі Cloudflare
   // і не зберігаються в коді. keep_vars — щоб розгортання їх не стирало.
   "keep_vars": true,
