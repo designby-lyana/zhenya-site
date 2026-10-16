@@ -144,8 +144,9 @@ export async function publish() {
   set({ publishing: true, publishError: '' });
   try {
     await api('/api/publish', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ rev: S.rev }) });
+    // «Публікую…» лишається, поки адмінка не перечитає новий стан — щоб кнопку не натиснули вдруге
+    await load().catch(() => {});
     set({ publishing: false, publishedAt: Date.now() });
-    await load();
     toast('Опубліковано. На сайті з’явиться за 1–2 хвилини.');
   } catch (e) {
     set({ publishing: false, publishError: e.message || 'Не вдалося опублікувати. Спробуйте ще раз.' });

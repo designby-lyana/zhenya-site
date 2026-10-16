@@ -93,6 +93,8 @@ export function FrameForm({ id, onClose }) {
                 onClick={() => {
                   update((d) => {
                     d.portfolio = renumber(sorted(d.portfolio.filter((x) => x.id !== id)));
+                    // номери у «Останніх» — без пропусків
+                    d.portfolio.filter((x) => x.recent).sort((a, b) => a.recent - b.recent).forEach((x, n) => (x.recent = n + 1));
                   });
                   onClose?.();
                 }}

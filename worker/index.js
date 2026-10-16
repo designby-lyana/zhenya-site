@@ -91,12 +91,16 @@ async function route(request, env, url, user) {
     const path = `/media/${base}-${rand}${ext}`;
     // одразу кладемо фото в GitHub (поки що «нічиє» — до публікації сайт його не бачить)
     const sha = await gh.createBlob(bytesToBase64(new Uint8Array(bytes)));
-    await kv.put(`up:${path}`, bytes, { metadata: { size: bytes.byteLength, type, at: Date.now(), sha } });
+    const meta = { size: bytes.byteLength, type, at: Date.now(), sha };
+    await kv.put(`up:${path}`, bytes, { metadata: meta });
+    await editUploads(kv, (l) => [...l.filter((u) => u.path !== path), { path, ...meta }]);
     return json({ path, size: bytes.byteLength });
   }
 
   if (p === '/api/upload' && m === 'DELETE') {
-    await kv.delete(`up:${url.searchParams.get('path')}`);
+    const path = url.searchParams.get('path');
+    await editUploads(kv, (l) => l.filter((u) => u.path !== path));
+    await kv.delete(`up:${path}`);
     return json({ ok: true });
   }
 
@@ -115,8 +119,10 @@ async function route(request, env, url, user) {
   }
 
   if (p === '/api/discard' && m === 'POST') {
+    const ups = await listUploads(kv);
     await kv.delete('draft');
-    for (const k of await listUploads(kv)) await kv.delete(`up:${k.path}`);
+    await kv.put(UPLOADS, '[]');
+    for (const k of ups) await kv.delete(`up:${k.path}`);
     return json({ ok: true });
   }
 
@@ -128,15 +134,15 @@ async function getDraft(kv) {
   return t ? JSON.parse(t) : null;
 }
 
+// Список щойно завантажених файлів тримаємо в одному ключі: kv.list() у Cloudflare оновлюється з затримкою до хвилини,
+// і видалений файл ще якийсь час «повертався» б (а при публікації міг потрапити на сайт).
+const UPLOADS = 'uploads';
 async function listUploads(kv) {
-  const out = [];
-  let cursor;
-  do {
-    const r = await kv.list({ prefix: 'up:', cursor });
-    for (const k of r.keys) out.push({ path: k.name.slice(3), size: k.metadata?.size || 0, type: k.metadata?.type, at: k.metadata?.at || 0, sha: k.metadata?.sha });
-    cursor = r.list_complete ? undefined : r.cursor;
-  } while (cursor);
-  return out;
+  const l = await kv.get(UPLOADS, { type: 'json' });
+  return Array.isArray(l) ? l : [];
+}
+async function editUploads(kv, fn) {
+  await kv.put(UPLOADS, JSON.stringify(fn(await listUploads(kv))));
 }
 
 // Опублікований контент на коміті — з кешу KV або з GitHub.
@@ -227,6 +233,8 @@ async function publish(env, gh, rev, user) {
       // Чернетку прибираємо, лише якщо поки ми публікували її ніхто не змінив (інакше нові правки лишаються в чернетці).
       const now = await getDraft(kv);
       if (!now || !draft || now.rev === draft.rev) await kv.delete('draft');
+      const done = new Set(uploads.map((u) => u.path));
+      await editUploads(kv, (l) => l.filter((u) => !done.has(u.path)));
       for (const u of uploads) {
         const bytes = await kv.get(`up:${u.path}`, { type: 'arrayBuffer' });
         if (bytes) await kv.put(`was:${u.path}`, bytes, { metadata: { type: u.type }, expirationTtl: 60 * 60 * 24 * 2 });

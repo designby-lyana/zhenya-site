@@ -3,7 +3,7 @@
 
 const eq = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 const byId = (list) => Object.fromEntries((list || []).map((x) => [x.id, x]));
-const q = (s) => `«${s}»`;
+const q = (s) => (String(s ?? '').trim() ? `«${s}»` : 'без назви');
 const sortedIds = (list) => [...(list || [])].sort((a, b) => (a.order ?? 99) - (b.order ?? 99)).map((x) => x.id);
 
 function orderChanged(pubList, draftList) {
