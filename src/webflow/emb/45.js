@@ -2,7 +2,7 @@
 (function(){
   var tries = 0, t = 0, last = '';
   function regroup(){
-    var track = document.querySelector('.pf-track'); if (!track || !window.Webflow || !Webflow.require) return;
+    var track = document.querySelector('[data-pf-track]'); if (!track || !window.Webflow || !Webflow.require) return;
     var sig = '', changed = false;
     [].forEach.call(track.children, function(it){
       if (!it.classList.contains('w-dyn-item')) return;
@@ -13,7 +13,7 @@
     if (changed || sig !== last) { last = sig; try { Webflow.require('lightbox').ready(); } catch (e) {} }
   }
   function init(){
-    var track = document.querySelector('.pf-track');
+    var track = document.querySelector('[data-pf-track]');
     if (!track) { if (tries++ < 40) setTimeout(init, 250); return; }
     regroup();
     new MutationObserver(function(){ clearTimeout(t); t = setTimeout(regroup, 120); }).observe(track, { attributes: true, subtree: true, attributeFilter: ['class'] });

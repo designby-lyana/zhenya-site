@@ -22,7 +22,7 @@ export default function Hero() {
     <>
       <div className="page-head">
         <div>
-          <h1>Фото головного екрана</h1>
+          <h1>Фото головного екрану</h1>
           <p className="sub">Перший екран сайту: фото змінюються парами під заголовком — 1 і 2, потім 3 і 4…</p>
         </div>
         <div className="row">

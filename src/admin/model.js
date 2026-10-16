@@ -47,7 +47,7 @@ export function usages(doc) {
     for (const ph of a.photos || []) if (ph.photo !== a.cover) addU(ph.photo, `Альбом · ${a.title}`);
   }
   const h = doc.site?.hero || {};
-  for (const x of [...(h.pair || []), ...(h.slides || [])]) addU(x.photo, 'Фото головного екрана');
+  for (const x of [...(h.pair || []), ...(h.slides || [])]) addU(x.photo, 'Фото головного екрану');
   addU(doc.site?.about?.photo, 'Про мене');
   addU(doc.site?.seo?.shareImage, 'Картинка для соцмереж');
   for (const t of doc.vibe?.tiles || []) {

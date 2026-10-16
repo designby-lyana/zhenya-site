@@ -347,3 +347,20 @@ textarea.fld { resize: vertical; }
 .login h1 { text-align: center; font-size: 24px; }
 .nav-logout { border: 0; background: transparent; text-align: left; cursor: pointer; }
 .main.is-busy .page { pointer-events: none; opacity: .6; }
+
+/* кадр із розгорнутими полями редагування — просто під його рядком */
+.trow-wrap { background: #fff; }
+.trow-wrap.is-open { box-shadow: inset 3px 0 0 var(--primary); background: #fafaf8; }
+.trow-wrap.is-open .trow { background: transparent; border-bottom-color: transparent; }
+.trow-edit { padding: 4px 16px 24px 100px; border-bottom: 1px solid var(--line); }
+.frame-form { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; max-width: 1000px; }
+.frame-form-photo { display: flex; flex-direction: column; gap: 8px; }
+.frame-form-photo .big { aspect-ratio: 4 / 5; border-radius: 12px; }
+.frame-form .form { gap: 16px; }
+.frame-form-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding-top: 14px; }
+.name-btn { border: 0; background: transparent; padding: 0; text-align: left; cursor: pointer; }
+@media (max-width: 900px) {
+  .trow-edit { padding: 0 12px 20px; }
+  .frame-form { grid-template-columns: 1fr; }
+  .frame-form-photo { max-width: 220px; }
+}

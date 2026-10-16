@@ -3,6 +3,7 @@ import { useStore, update } from '../store.js';
 import { sorted, renumber, siteNumbers, catCounts, catKey, uniqueId } from '../model.js';
 import { Btn, LinkBtn, Icon, Photo, Switch, Sortable, Dialog, moveById } from '../ui.jsx';
 import { plural } from '../changes.js';
+import { FrameForm } from './EditFrame.jsx';
 
 const SIZES = [
   { w: 56, h: 70, label: 'Малі фото' },
@@ -10,8 +11,9 @@ const SIZES = [
   { w: 132, h: 165, label: 'Великі фото' },
 ];
 
-export default function Frames() {
+export default function Frames({ initialOpen = '' }) {
   const doc = useStore((s) => s.doc);
+  const [open, setOpen] = useState(initialOpen); // кадр, у якого розгорнуто поля редагування
   const [filter, setFilter] = useState('all');
   const [size, setSize] = useState(() => +(localStorage.getItem('adm-size') || 1));
   const [cats, setCats] = useState(false);
@@ -89,6 +91,7 @@ export default function Frames() {
           items={shown}
           onMove={move}
           render={(p, handle) => (
+            <div className={`trow-wrap ${open === p.id ? 'is-open' : ''}`}>
             <div className={`trow ${p.hidden ? 'is-hidden' : ''}`}>
               <span className="c-num">
                 <button type="button" className="handle" {...handle} aria-label={`Перемістити «${p.title}»`}>
@@ -100,7 +103,7 @@ export default function Frames() {
                 <Photo path={p.photo} alt={p.alt} style={{ width: dims.w, height: dims.h }} className="thumb" />
               </span>
               <span className="c-name">
-                <a href={`#/frame/${encodeURIComponent(p.id)}`} className="name-link">{p.title || 'Без назви'}</a>
+                <button type="button" className="name-link name-btn" aria-expanded={open === p.id} onClick={() => setOpen(open === p.id ? '' : p.id)}>{p.title || 'Без назви'}</button>
                 {p.recent ? <span className="badge">{Icon.star} В «Останніх»</span> : null}
                 {p.hidden ? <span className="badge badge-muted">Сховано — на сайті не видно</span> : null}
               </span>
@@ -113,8 +116,14 @@ export default function Frames() {
               </span>
               <span className="c-act">
                 <Switch on={!p.hidden} onChange={(on) => setHidden(p.id, !on)} label={`«${p.title}» на сайті`} />
-                <LinkBtn href={`#/frame/${encodeURIComponent(p.id)}`}>Редагувати</LinkBtn>
+                <Btn aria-expanded={open === p.id} aria-controls={`edit-${p.id}`} onClick={() => setOpen(open === p.id ? '' : p.id)}>{open === p.id ? 'Згорнути' : 'Редагувати'}</Btn>
               </span>
+            </div>
+            {open === p.id && (
+              <div className="trow-edit" id={`edit-${p.id}`}>
+                <FrameForm id={p.id} onClose={() => setOpen('')} />
+              </div>
+            )}
             </div>
           )}
         />

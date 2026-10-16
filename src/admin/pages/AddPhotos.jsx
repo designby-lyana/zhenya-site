@@ -6,7 +6,7 @@ import { prepareImage, PhotoError } from '../image.js';
 import { heroSeq, setHeroSeq } from './Hero.jsx';
 import { plural } from '../changes.js';
 
-const BACK = { frames: ['#/frames', 'Кадри'], hero: ['#/hero', 'Фото головного екрана'] };
+const BACK = { frames: ['#/frames', 'Кадри'], hero: ['#/hero', 'Фото головного екрану'] };
 
 export default function AddPhotos({ to }) {
   const doc = useStore((s) => s.doc);

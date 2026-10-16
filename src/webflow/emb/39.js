@@ -5,6 +5,7 @@
   var tabs = document.querySelector('.w-tabs'); if (!tabs) return;
   var pane = tabs.querySelector('.w-tab-pane .filter-bar'); pane = pane && pane.closest('.w-tab-pane'); if (!pane) return;
   var track = pane.querySelector('.gallery'); if (!track) return;
+  track.setAttribute('data-pf-track', '');           // стала мітка стрічки (клас pf-track знімається в режимі сітки)
   var list = track.parentElement;                    // .w-dyn-list — його й фіксуємо
   var sec = tabs.closest('section'); if (sec) sec.classList.add('pf-film-sec');
   var items = [].slice.call(track.children);
@@ -91,7 +92,7 @@
   function step(){ var n = getComputedStyle(track).gridTemplateColumns.split(' ').filter(Boolean).length || 4; return n * GRID_ROWS; }
   gmBtn.addEventListener('click', function(e){
     e.preventDefault();
-    if (gmBtn.getAttribute('data-end')) { setGrid(false); var y = pane.getBoundingClientRect().top + scrollY - 120; scrollTo({ top: y }); return; }
+    if (gmBtn.getAttribute('data-end')) { if (cat !== 'all') pick(chips[0]); setGrid(false); var y = pane.getBoundingClientRect().top + scrollY - 120; scrollTo({ top: y }); return; }
     gridShown += step(); apply();
   });
 
@@ -193,13 +194,19 @@
     scrollTo({ top: top + p * dist });
   });
 
-  // чіпи-фільтри
+  // чіпи-фільтри.
+  // «Усі» — плівка (горизонтальна стрічка). Будь-яка категорія — одразу сітка з усіма її кадрами,
+  // як у «Останніх»: так видно всю категорію одразу, без гортання вбік. «Згорнути» під сіткою повертає до «Усі».
   var chips = [].slice.call(pane.querySelectorAll('.chip'));
+  function pick(c){
+    chips.forEach(function(x){ x.classList.toggle('is-active', x === c); });
+    cat = c.getAttribute('data-cat') === 'all' ? 'all' : c.textContent.trim();
+  }
   chips.forEach(function(c){
     c.addEventListener('click', function(e){
       e.preventDefault();
-      chips.forEach(function(x){ x.classList.toggle('is-active', x === c); });
-      cat = c.getAttribute('data-cat') === 'all' ? 'all' : c.textContent.trim();
+      pick(c);
+      if (cat !== 'all') { setGrid(true); return; }
       if (grid) setGrid(false); else apply();
       var y = pane.getBoundingClientRect().top + scrollY - 120;
       if (scrollY > y) scrollTo({ top: y });

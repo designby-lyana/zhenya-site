@@ -143,8 +143,8 @@ export function computeChanges(pub, doc, extra = {}) {
         for (const k of keys) put(d.site, k, structuredClone(get(pb.site, k)));
       });
   };
-  S('Фото головного екрана', ['hero.pair', 'hero.slides']);
-  S('Тексти головного екрана', ['hero.title', 'hero.titleAccent', 'hero.subtitle', 'hero.facts', 'header.genres', 'header.tagline']);
+  S('Фото головного екрану', ['hero.pair', 'hero.slides']);
+  S('Тексти головного екрану', ['hero.title', 'hero.titleAccent', 'hero.subtitle', 'hero.facts', 'header.genres', 'header.tagline']);
   S('Блок «Про мене»', ['about']);
   S('Ціни', ['prices']);
   S('Відгуки', ['reviews']);

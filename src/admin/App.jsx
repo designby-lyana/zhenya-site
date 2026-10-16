@@ -4,7 +4,6 @@ import { useStore, load, publish, discardAll, update, setMediaDel, getState, flu
 import { computeChanges, plural } from './changes.js';
 import { Btn, Dialog, Icon } from './ui.jsx';
 import Frames from './pages/Frames.jsx';
-import EditFrame from './pages/EditFrame.jsx';
 import Albums from './pages/Albums.jsx';
 import EditAlbum from './pages/EditAlbum.jsx';
 import Hero from './pages/Hero.jsx';
@@ -35,7 +34,7 @@ export const go = (to) => (location.hash = to);
 
 const NAV = [
   { group: 'Портфоліо', items: [['frames', 'Кадри'], ['albums', 'Альбоми']] },
-  { group: 'Сторінка', items: [['hero', 'Фото головного екрана'], ['texts', 'Тексти сайту'], ['vibe', 'Вайбовий екран']] },
+  { group: 'Сторінка', items: [['hero', 'Фото головного екрану'], ['texts', 'Тексти сайту'], ['vibe', 'Вайбовий екран']] },
 ];
 const ACTIVE = { frame: 'frames', add: 'frames', album: 'albums' };
 
@@ -62,7 +61,7 @@ export default function App() {
   const page = (() => {
     switch (route.page) {
       case 'frames': return <Frames />;
-      case 'frame': return <EditFrame key={route.id} id={route.id} />;
+      case 'frame': return <Frames key={route.id} initialOpen={route.id} />;
       case 'albums': return <Albums />;
       case 'album': return <EditAlbum key={route.id} id={route.id} />;
       case 'hero': return <Hero />;
