@@ -364,3 +364,10 @@ textarea.fld { resize: vertical; }
   .frame-form { grid-template-columns: 1fr; }
   .frame-form-photo { max-width: 220px; }
 }
+
+@media (max-width: 900px) {
+  /* фото альбому й головного екрану — по два в ряд, як пари на сайті */
+  .pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .pgrid .ptile-actions .btn-sm { padding: 0 6px; font-size: 13px; }
+  .pill { height: 36px; padding: 0 14px; }
+}

@@ -94,7 +94,7 @@ export default function Texts() {
           const isOpen = !!open[sec.id];
           return (
             <section key={sec.id} className={`acc ${isOpen ? 'is-open' : ''}`}>
-              <button type="button" className="acc-head" aria-expanded={isOpen} onClick={() => setOpen({ ...open, [sec.id]: !isOpen })}>
+              <button type="button" className="acc-head" aria-expanded={isOpen} onClick={() => setOpen((o) => ({ ...o, [sec.id]: !o[sec.id] }))}>
                 <span className="acc-chev">{Icon.chevron}</span>
                 <span className="acc-title">
                   <span className="row-tight">

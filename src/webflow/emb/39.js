@@ -121,7 +121,7 @@
     grid = on;
     tabs.classList.toggle('pf-film', !grid);
     hint.style.display = grid ? 'none' : '';
-    if (on) { track.classList.remove('pf-track'); track.style.transform = ''; pane.style.height = ''; gridShown = step(); reveal(); follow(0); }
+    if (on) { track.classList.remove('pf-track'); track.style.transform = ''; pane.style.height = ''; gridShown = cat !== 'all' ? 1e9 : step(); reveal(); follow(0); }   // категорію показуємо всю одразу, «Усі роботи» — порціями
     else track.classList.add('pf-track');
     apply();
     if (on) { var y = pane.getBoundingClientRect().top + scrollY - 120; scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }); }
