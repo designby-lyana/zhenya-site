@@ -371,3 +371,5 @@ textarea.fld { resize: vertical; }
   .pgrid .ptile-actions .btn-sm { padding: 0 6px; font-size: 13px; }
   .pill { height: 36px; padding: 0 14px; }
 }
+.pubbar-err { font-size: 13px; font-weight: 500; color: var(--danger); margin-top: 2px; }
+.toast { cursor: pointer; }

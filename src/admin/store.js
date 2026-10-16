@@ -141,14 +141,14 @@ export async function publish() {
     toast('Не вдалося зберегти останні зміни, тому публікацію зупинено. Перевірте інтернет і спробуйте ще раз.', 'error');
     return;
   }
-  set({ publishing: true });
+  set({ publishing: true, publishError: '' });
   try {
     await api('/api/publish', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ rev: S.rev }) });
     set({ publishing: false, publishedAt: Date.now() });
     await load();
     toast('Опубліковано. На сайті з’явиться за 1–2 хвилини.');
   } catch (e) {
-    set({ publishing: false });
+    set({ publishing: false, publishError: e.message || 'Не вдалося опублікувати. Спробуйте ще раз.' });
     if (e.message !== 'auth') toast(e.message || 'Не вдалося опублікувати. Спробуйте ще раз.', 'error');
   }
 }
@@ -205,5 +205,10 @@ let toastTimer;
 export function toast(text, kind = 'ok') {
   clearTimeout(toastTimer);
   set({ toast: { text, kind, id: Date.now() } });
-  toastTimer = setTimeout(() => set({ toast: null }), 5000);
+  // помилки тримаємо довше, щоб встигнути прочитати
+  toastTimer = setTimeout(() => set({ toast: null }), kind === 'error' ? 15000 : 5000);
+}
+export function toastClose() {
+  clearTimeout(toastTimer);
+  set({ toast: null });
 }

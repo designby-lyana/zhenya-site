@@ -34,6 +34,7 @@ export class GitHub {
       const msg = json.errors ? json.errors.map((e) => e.message).join('; ') : text.slice(0, 200);
       const err = new Error(`GitHub: ${msg}`);
       err.stale = /expected|head|oid|not up to date|stale/i.test(msg);
+      if (res.status === 401 || res.status === 403 || /Bad credentials|not accessible/i.test(msg)) { err.status = 502; err.publicMessage = 'Адмінка не може записати зміни на GitHub: у ключа доступу немає дозволу на запис або він закінчився. Напишіть Ляні — це налаштовується за 2 хвилини, ваші зміни збережені в чернетці.'; }
       throw err;
     }
     return json.data;
@@ -92,6 +93,7 @@ export class GitHub {
       const err = new Error(`GitHub ${res.status}: ${json.message || text.slice(0, 200)}`);
       // 422 «Update is not a fast forward» — main змінився, поки ми готували коміт
       err.stale = res.status === 422 || res.status === 409;
+      if (res.status === 401 || res.status === 403) { err.status = 502; err.publicMessage = 'Адмінка не може записати зміни на GitHub: у ключа доступу немає дозволу на запис або він закінчився. Напишіть Ляні — це налаштовується за 2 хвилини, ваші зміни збережені в чернетці.'; }
       throw err;
     }
     return json;

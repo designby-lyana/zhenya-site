@@ -1,6 +1,6 @@
 // Адмінка сайту Жені. Сторінки перемикаються через адресу після # (#/frames, #/albums …).
 import { useEffect, useMemo, useState } from 'react';
-import { useStore, load, publish, discardAll, update, setMediaDel, getState, flushSave } from './store.js';
+import { useStore, load, publish, discardAll, update, setMediaDel, getState, flushSave, toastClose } from './store.js';
 import { computeChanges, plural } from './changes.js';
 import { Btn, Dialog, Icon } from './ui.jsx';
 import Frames from './pages/Frames.jsx';
@@ -143,6 +143,7 @@ function PublishBar() {
             <span className="pubbar-count">
               {n ? `${plural(n, 'зміна', 'зміни', 'змін')} ще не на сайті` : 'Нові файли ще не на сайті'}
               <span className="pubbar-save">{st.saveError ? st.saveError : st.saving ? 'Зберігаю чернетку…' : 'Чернетку збережено'}</span>
+              {st.publishError && <span className="pubbar-err" role="alert">Не опубліковано: {st.publishError}</span>}
             </span>
             <Btn onClick={() => setOpen(true)}>Переглянути зміни</Btn>
             <Btn kind="primary" disabled={st.publishing} onClick={publish}>{st.publishing ? 'Публікую…' : 'Опублікувати'}</Btn>
@@ -200,7 +201,7 @@ function Toast() {
   const t = useStore((s) => s.toast);
   if (!t) return null;
   return (
-    <div className={`toast toast-${t.kind}`} role="status" key={t.id}>
+    <div className={`toast toast-${t.kind}`} role="status" key={t.id} onClick={() => toastClose()}>
       {t.text}
     </div>
   );
