@@ -4,8 +4,8 @@ section.alive{background:#2B2B28;padding:0;overflow-x:clip}
 .zf{position:relative;width:100%}
 .zf-i{position:absolute;overflow:hidden;background:#34342f}
 .zf-i img,.zf-i video{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .6s ease,filter .8s ease}
-.zf-i img{opacity:0}
-.zf-i img.is-in{opacity:1}
+.zf-i img,.zf-i video{opacity:0}
+.zf-i img.is-in,.zf-i video.is-in{opacity:1}
 .zf-i.zf-dim1 img,.zf-i.zf-dim1 video{filter:brightness(.5) saturate(.8)}
 .zf-i.zf-dim2 img,.zf-i.zf-dim2 video{filter:brightness(.72) saturate(.9)}
 .zf-side{position:absolute;z-index:3;display:none;flex-direction:column;padding:72px 16px 0 28px;box-sizing:border-box;color:#F2F0EA}

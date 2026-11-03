@@ -14,8 +14,8 @@
       else { im.srcset=C+b+"-p-500.jpg 500w, "+C+b+"-p-800.jpg 800w, "+C+b+"-p-1080.jpg 1080w"; im.sizes="(max-width:767px) 50vw, (max-width:991px) 33vw, 20vw"; im.src=C+b+"-p-500.jpg"; }
       if(el.hasAttribute("data-auto")) im.addEventListener("load",function(){ if(im.naturalWidth){ el.style.setProperty("--ar",im.naturalWidth+"/"+im.naturalHeight); el.removeAttribute("data-auto"); later(); } });
       el.appendChild(im); }
-    else if(v){ var vd=document.createElement("video"); vd.setAttribute("data-src",C+v+".mp4"); vd.poster=C+el.getAttribute("data-p")+".jpg";
-      vd.muted=true; vd.loop=true; vd.playsInline=true; vd.setAttribute("playsinline",""); vd.preload="none"; el.appendChild(vd); }
+    else if(v){ var vd=document.createElement("video"); vd.setAttribute("data-src",C+v+".mp4"); vd.setAttribute("data-poster",C+el.getAttribute("data-p")+".jpg");
+      vd.muted=true; vd.loop=true; vd.playsInline=true; vd.setAttribute("playsinline",""); vd.setAttribute("aria-hidden","true"); vd.preload="none"; el.appendChild(vd); }
   });
   function cols(){var w=window.innerWidth; return w<768?2:(w<992?3:5);}
   function ar(v){var a=v.split("/");return parseFloat(a[1])/parseFloat(a[0]);}
@@ -204,15 +204,43 @@
     function on(){im.classList.add("is-in");}
     if(im.complete&&im.naturalWidth) on(); else { im.addEventListener("load",on); im.addEventListener("error",on); }
   });
+  // ——— відео ———
+  // Заставка вантажиться, лише коли блок наближається (≈1,5 екрана), і плавно з'являється, як фото.
+  // Саме відео качаємо по одному: спершу те, що на екрані, потім наступне. Грає лише видиме.
+  // «Зменшити рух» або економія трафіку — лише заставка, відео не качаємо зовсім.
   var vids=[].slice.call(box.querySelectorAll("video"));
-  function load(v){ if(!v.getAttribute("src")){ v.src=v.getAttribute("data-src"); v.preload="auto"; } }
-  if(!window.IntersectionObserver){ vids.forEach(load); return; }
-  var pre=new IntersectionObserver(function(es){es.forEach(function(e){
-    if(e.isIntersecting){ load(e.target); pre.unobserve(e.target); }
-  });},{rootMargin:"400px 0px"});
+  var nc=navigator.connection||{}, lite=reduce || nc.saveData || /(^|-)2g$/.test(nc.effectiveType||"");
+  function showPoster(v){
+    if(v._p) return; v._p=1;
+    var u=v.getAttribute("data-poster"), pi=new Image();
+    pi.onload=pi.onerror=function(){ v.poster=u; v.classList.add("is-in"); };
+    pi.src=u;
+  }
+  var queue=[], busy=null;
+  function pump(){
+    if(busy) return;
+    var v=queue.filter(function(x){ return x._vis; })[0] || queue[0]; if(!v) return;
+    queue.splice(queue.indexOf(v),1);
+    if(v.getAttribute("src")){ pump(); return; }
+    busy=v; var done=function(){ v.removeEventListener("canplaythrough",done); v.removeEventListener("error",done); clearTimeout(v._t); if(busy===v){ busy=null; pump(); } };
+    v.addEventListener("canplaythrough",done); v.addEventListener("error",done);
+    v._t=setTimeout(done,8000); // повільний інтернет: не тримаємо чергу вічно
+    v.preload="auto"; v.src=v.getAttribute("data-src");
+    if(v._vis) play(v);
+  }
+  function want(v,first){ if(lite || v.getAttribute("src") || queue.indexOf(v)>=0) return; if(first) queue.unshift(v); else queue.push(v); pump(); }
+  function play(v){
+    if(lite) return;
+    if(!v.getAttribute("src")){ want(v,true); return; }
+    var p=v.play(); if(p&&p.catch) p.catch(function(){}); // iPhone в режимі енергозбереження не дає грати — лишається заставка
+  }
+  if(!window.IntersectionObserver){ vids.forEach(function(v){ showPoster(v); want(v); }); return; }
+  var near=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){ showPoster(e.target); want(e.target); near.unobserve(e.target); }
+  });},{rootMargin:"150% 0px"});
   var io=new IntersectionObserver(function(es){es.forEach(function(e){
-    var v=e.target;
-    if(e.isIntersecting && !reduce){ load(v); var p=v.play(); if(p&&p.catch) p.catch(function(){}); } else { v.pause(); }
-  });},{threshold:0.25});
-  vids.forEach(function(v){ v.muted=true; pre.observe(v); io.observe(v); });
+    var v=e.target; v._vis=e.isIntersecting;
+    if(e.isIntersecting){ showPoster(v); play(v); } else if(!v.paused) v.pause();
+  });},{threshold:0.2});
+  vids.forEach(function(v){ v.muted=true; near.observe(v); io.observe(v); });
 })();
