@@ -1,6 +1,6 @@
 # Адмінка сайту
 
-Власна адмінка для Жені за адресою **`/admin`** (наприклад, https://zhenya-bychkova.r-kharuzina.workers.dev/admin).
+Власна адмінка для Жені за адресою **`/admin`** (наприклад, https://bychkova.com.ua/admin).
 Замінює Pages CMS.
 
 ## Як вона працює
