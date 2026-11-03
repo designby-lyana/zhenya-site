@@ -29,7 +29,10 @@ const cover = img(album.cover);
 <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous"/>
 <link href="https://fonts.googleapis.com/css?family=Raleway:400,700%7CRaleway+Dots:400&display=swap" rel="stylesheet"/>
 <script is:inline set:html={E("02.js")}></script>
-<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="/favicon.ico" rel="icon" sizes="48x48"/>
+<link href="/favicon-32.png" rel="icon" type="image/png" sizes="32x32"/>
+<link href="/favicon-192.png" rel="icon" type="image/png" sizes="192x192"/>
+<link href="/apple-touch-icon.png" rel="apple-touch-icon"/>
 </head>
 <body><main class="album-page"><div class="album-bar"><a href="/#portfolio" class="album-back">← Усі альбоми</a><a href="/" class="album-brand">{site.header.name}</a></div><header class="album-head"><div class="album-eyebrow">Альбом</div><h1 class="album-title">{album.title}</h1></header><div class="album-cover-wrap"><img src={cover.src} srcset={cover.srcset} sizes={cover.srcset ? '100vw' : undefined} loading="lazy" alt={album.coverAlt} class="album-cover-img"/></div><div class="album-gallery-slot"><div class="w-dyn-list"><div role="list" class="w-dyn-items">{album.photos.map((p) => { const im = img(p.photo); return (<div role="listitem" class="w-dyn-item w-dyn-repeater-item"><img src={im.src} srcset={im.srcset} sizes={im.srcset ? '(max-width: 991px) 50vw, 33vw' : undefined} loading="lazy" alt={p.alt}/></div>); })}</div>{album.photos.length === 0 && <div class="w-dyn-empty"><div>No items found.</div></div>}</div><div class="w-embed w-script"><!-- Сторінка альбому: фото з поля «Фото альбому» двома колонками (на широких екранах три), з’являються мʼяко.
 Заглушка «Альбом ще наповнюється» ховається, якщо в альбомі є фото.
